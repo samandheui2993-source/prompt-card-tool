@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎴 提示词抽卡</title>
+<style>
+  :root{--bg:#0f1117;--panel:#1a1d27;--card:#232735;--line:#333a4d;--fg:#e8ecf5;--dim:#8b93a7;--acc:#7c5cff;--acc2:#ff5c8a;--pos:#3ddc97;--neg:#ff7a7a;}
+  *{box-sizing:border-box}
+  body{margin:0;padding:20px;background:radial-gradient(1200px 600px at 50% -10%,#241b4d 0%,var(--bg) 60%);color:var(--fg);font:14px/1.6 "Segoe UI","Microsoft YaHei",system-ui,sans-serif;}
+  h1{font-size:20px;margin:0 0 12px;letter-spacing:1px}
+  h1 span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tab{background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:11px;padding:9px 18px;font:inherit;cursor:pointer}
+  .tab.active{color:#fff;border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset,0 6px 18px #7c5cff33}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:16px;box-shadow:0 10px 30px #0006}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:10px}
+  label{color:var(--dim);display:flex;gap:6px;align-items:center}
+  select,input,button,textarea{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:7px 10px;font:inherit}
+  input[type=number]{width:76px}
+  textarea{width:100%;min-height:82px;resize:vertical;font-family:Consolas,"Microsoft YaHei",monospace}
+  button{cursor:pointer;transition:.15s}
+  button:hover{border-color:var(--acc)}
+  button.primary{background:linear-gradient(90deg,var(--acc),var(--acc2));border:none;color:#fff;font-weight:600;padding:9px 22px;letter-spacing:1px}
+  button.mini{padding:3px 9px;font-size:12px;border-radius:7px}
+  #picker{max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:10px;display:none;background:#161a24}
+  #picker.on{display:block}
+  #picker .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px 10px}
+  #picker label{color:var(--fg);font-size:12.5px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #picker input{accent-color:var(--acc)}
+  .toolbar{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;animation:pop .35s cubic-bezier(.2,.9,.3,1.3)}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+  .head .no{color:var(--acc2);font-weight:700}
+  .sec{margin-bottom:10px}
+  .sec .ttl{font-size:12.5px;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+  .ttl .dot{width:8px;height:8px;border-radius:50%}
+  .pos .dot{background:var(--pos)} .pos .ttl{color:var(--pos)}
+  .neg .dot{background:var(--neg)} .neg .ttl{color:var(--neg)}
+  .en{font-family:Consolas,monospace;font-size:13.5px;background:#12151e;border:1px solid var(--line);border-radius:10px;padding:10px;word-break:break-word}
+  .pos .en{color:#b9f5d0}
+  .neg .en{color:#ffc4c4}
+  .zh{color:var(--dim);margin:6px 0 0;font-size:12.5px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+  td{padding:3px 6px;border-bottom:1px dashed #2a2f3f}
+  td.k{color:var(--dim);white-space:nowrap;width:130px}
+  td.v b{color:#fff} td.v i{color:var(--dim);font-style:normal}
+  details summary{cursor:pointer;color:var(--dim);font-size:12.5px}
+  .kw{margin-top:6px} .kw .h{color:var(--acc2);font-weight:600;font-size:12.5px}
+  .kw .m{color:var(--dim);font-size:12.5px;margin-left:8px}
+  .miss{color:var(--neg);font-size:12.5px;margin-top:6px}
+  .hint{color:var(--dim);font-size:12px;margin-top:6px}
+  .spin{animation:spin .6s ease}@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<h1>🎴 <span>提示词抽卡</span> <small id="meta" style="font-size:12px;color:#8b93a7;font-weight:400"></small></h1>
+
+<div class="tabs">
+  <button class="tab active" data-tab="gacha">🎲 随机抽卡</button>
+  <button class="tab" data-tab="req">🔎 按需求出词</button>
+</div>
+
+<!-- ============ 随机抽卡 ============ -->
+<section id="tab-gacha">
+  <div class="panel">
+    <div class="row">
+      <label>模式
+        <select id="mode">
+          <option value="recipe">完整角色（推荐）</option>
+          <option value="cats">指定类别各抽一</option>
+          <option value="all">纯随机词</option>
+          <option value="combos">组合库（整套）</option>
+          <option value="gore">血腥暴力（整套）</option>
+        </select>
+      </label>
+      <label>套数 <input id="count" type="number" value="1" min="1" max="30"></label>
+      <label>反向数 <input id="negcount" type="number" value="30" min="0" max="80"></label>
+      <label>种子 <input id="seed" type="number" placeholder="留空=随机"></label>
+      <label title="只抽 Danbooru post_count ≥ 阈值的词（缺热度数据的词按 0 计，会被筛掉；反向与组合库不受影响）">热度 <select id="hot"></select></label>
+      <label title="开启后按 √热度 加权抽样：热门词更容易被抽到；关闭则各类别内均匀"><input type="checkbox" id="hotw"> 热度加权</label>
+      <button id="draw" class="primary">抽 卡</button>
+      <button id="copyAll" class="mini">复制全部</button>
+    </div>
+    <div class="hint" id="combohint" style="display:none">组合库模式：每次随机抽一整条完整组合；首次使用会按需加载 组合库数据.js（可能稍慢），之后即走缓存。</div>
+    <div class="hint" id="hothint" style="display:none">热度用 Danbooru post_count：「≥阈值」只抽达到热度的词（缺热度数据按 0 计会被筛掉；某类凑不满时该类自动跳过）；「加权」按 √热度 抽样，热门词更容易出。反向与组合库不受影响。</div>
+    <div class="hint" id="gorehint" style="display:none">血腥暴力模式：从血腥暴力组合库随机抽（女性向/乙游/BL 游戏与全男系列角色专用）；首次使用会按需加载 血腥组合库数据.js。</div>
+    <div id="picker">
+      <div class="toolbar">
+        <button class="mini" data-act="default">默认配方</button>
+        <button class="mini" data-act="all">全选</button>
+        <button class="mini" data-act="none">全不选</button>
+        <span style="color:var(--dim);font-size:12px" id="pickinfo"></span>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+  <div id="results"></div>
+</section>
+
+<!-- ============ 按需求出词 ============ -->
+<section id="tab-req" style="display:none">
+  <div class="panel">
+    <div class="row">
+      <textarea id="qtext" placeholder="直接输入你的要求，可以是一句话，也可以是一堆关键词，中英文都行。例如：&#10;一个银发双马尾的猫耳女孩，穿着泳装，在泳池边害羞地笑着&#10;或：银发 猫耳 泳装 害羞   /   silver hair cat ears swimsuit"></textarea>
+    </div>
+    <div class="row">
+      <button id="genq" class="primary">拆解并生成</button>
+      <label><input type="checkbox" id="qcore" checked> 使用核心反向词</label>
+      <label>反向数 <input id="qneg" type="number" value="30" min="0" max="80"></label>
+      <button id="qclear" class="mini">清空</button>
+    </div>
+    <div class="hint">会自动把句子拆开：扫描整句里出现的词条，也会按空格/逗号拆分关键词，中英文均可；未识别的部分会单独提示。</div>
+  </div>
+  <div id="qresults"></div>
+</section>
+
+<script src="抽卡数据.js"></script>
+<script src="共享常量.js"></script>
+<script>
+const SC = window.SHARED_CONSTANTS;
+if (!SC) throw new Error('缺少 共享常量.js：请运行 _build\\build-constants.ps1 生成');
+const DATA = (window.PROMPT_DATA && window.PROMPT_DATA.categories) || [];
+/* 黑名单词条（共享常量.json 的 wipeTerms）：名牌 / 写名字的框之类，任何模式都不进正向（负面词类别不受影响） */
+const WIPE = new Set((((SC.wipeTerms||{}).terms)||[]).map(s=>String(s).trim().toLowerCase()));
+if(WIPE.size) DATA.forEach(c=>{ if(c.id==='negative') return; c.terms=c.terms.filter(t=>!WIPE.has(String(t[0]).trim().toLowerCase())); });
+let CARDS = [];   // 角色卡按需懒加载（见 loadCards）；命中「按需求」时才载入 角色卡.js
+const byId = {}; DATA.forEach(c=>byId[c.id]=c);
+const NEG = byId['negative'] ? byId['negative'].terms : [];
+const CORE = SC.core;   // 反向核心词（来源: 共享常量.json）
+
+/* ---- 热度（posts = 词条第三元素 = Danbooru post_count，缺数据按 0） ----
+   hotTiers 档位存 共享常量.json（命令行版等价参数 -MinPosts / -WeightPosts）；
+   类内凑不满阈值时跳过该类；反向与组合库不走热度。 */
+const hotSel = document.getElementById('hot'), hotW = document.getElementById('hotw');
+(SC.hotTiers || [[0, '全部']]).forEach(t => {
+  const o = document.createElement('option'); o.value = t[0]; o.textContent = t[1]; hotSel.appendChild(o);
+});
+const HOT_MODE = () => (+hotSel.value > 0) || hotW.checked;
+const _pools = {};
+function poolOf(id) {   // null = 该类无候选（达到阈值 0 个）；否则 { idx, cum 或 null, total }
+  const k = id + '|' + hotSel.value + '|' + (hotW.checked ? 1 : 0);
+  if (k in _pools) return _pools[k];
+  const c = byId[id]; let p = null;
+  if (c && c.terms.length && HOT_MODE()) {
+    const min = +hotSel.value || 0;
+    let idx = null;
+    if (min > 0) { idx = []; for (let i = 0; i < c.terms.length; i++) if ((c.terms[i][2] || 0) >= min) idx.push(i); }
+    if (!idx || idx.length) {
+      if (!hotW.checked) p = { idx, cum: null, total: 0 };
+      else {
+        const a = idx || [...c.terms.keys()];
+        const cum = new Float64Array(a.length);
+        let t = 0;
+        for (let i = 0; i < a.length; i++) { t += Math.sqrt(Math.max(1, c.terms[a[i]][2] || 0)); cum[i] = t; }
+        p = { idx: a, cum, total: t };
+      }
+    }
+  }
+  _pools[k] = p;
+  return p;
+}
+
+/* ---- 组合库：按需懒加载 组合库数据.js（file:// 下 fetch 会被拦，改用 <script> 注入） ---- */
+let _combosP=null;
+function loadCombos(){
+  if(Array.isArray(window.EROTIC_COMBOS)) return Promise.resolve(window.EROTIC_COMBOS);
+  if(_combosP) return _combosP;
+  _combosP=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='组合库数据.js';
+    s.onload=()=>Array.isArray(window.EROTIC_COMBOS)?res(window.EROTIC_COMBOS):rej(new Error('组合库数据.js 未包含 EROTIC_COMBOS'));
+    s.onerror=()=>{_combosP=null;rej(new Error('找不到 组合库数据.js，请先运行 _build\\build-combos.ps1'));};
+    document.head.appendChild(s);
+  });
+  return _combosP;
+}
+
+/* ---- 角色卡：按需懒加载 角色卡.js（只在「按需求出词」用到；file:// 下用 <script> 注入） ---- */
+let _cardsP=null;
+function loadCards(){
+  if(Array.isArray(window.CHARACTER_CARDS)){ CARDS=window.CHARACTER_CARDS; return Promise.resolve(CARDS); }
+  if(_cardsP) return _cardsP;
+  _cardsP=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='角色卡.js';
+    s.onload=()=>{ CARDS=Array.isArray(window.CHARACTER_CARDS)?window.CHARACTER_CARDS:[]; res(CARDS); };
+    s.onerror=()=>{ _cardsP=null; rej(new Error('找不到 角色卡.js')); };
+    document.head.appendChild(s);
+  });
+  return _cardsP;
+}
+
+/* ---- 血腥暴力库 + 女性向/男同角色名单：按需懒加载（规则与「血腥暴力」模式用） ---- */
+let _goreP=null;
+function loadGore(){
+  const need=[];
+  if(!Array.isArray(window.GORE_COMBOS)) need.push(['血腥组合库数据.js',()=>Array.isArray(window.GORE_COMBOS)]);
+  if(!window.GORE_CHARS) need.push(['女性向男同角色.js',()=>!!window.GORE_CHARS]);
+  if(!need.length) return Promise.resolve(true);
+  if(_goreP) return _goreP;
+  const one=([src,check])=>new Promise(res=>{
+    const s=document.createElement('script');
+    s.src=src; s.onload=()=>res(check()); s.onerror=()=>res(false);
+    document.head.appendChild(s);
+  });
+  _goreP=Promise.all(need.map(one)).then(()=>{_goreCharsL=null;return true;}).catch(()=>{_goreP=null;return false;});
+  return _goreP;
+}
+
+/* ---- 女性向 / 乙游 / BL 游戏·全男系列：命中就只输出血腥暴力提示词（名单来源: 共享常量.json 的 goreOnly） ---- */
+function goreListed(ser){
+  const G=SC.goreOnly; if(!G) return false;
+  const k=String(ser||'').replace(/\\/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+  if(!k) return false;
+  const pats=(G.series||[]).slice();
+  if(G.useAuto) (G.seriesAuto||[]).forEach(x=>pats.push(x+'*'));
+  return pats.some(p=>{const pk=p.replace(/\*$/,'').trim().toLowerCase(); return p.endsWith('*')?k.startsWith(pk):k===pk;});
+}
+let _goreCharsL=null;
+function goreCharList(){
+  if(_goreCharsL) return _goreCharsL;
+  _goreCharsL={};
+  const CH=window.GORE_CHARS||{};
+  Object.keys(CH).forEach(k=>{_goreCharsL[k.toLowerCase()]=k;});
+  return _goreCharsL;
+}
+function goreRule(raw){
+  const G=SC.goreOnly; if(!G||!G.enabled) return null;
+  const s=String(raw||'').toLowerCase();
+  const wordIn=k=>{const kk=String(k||'').toLowerCase(); if(!kk||!s.includes(kk))return false; return new RegExp('(^|[^a-z0-9])'+esc(kk)+'([^a-z0-9]|$)').test(s);};
+  const CHL=goreCharList();
+  let char='',charZh='',series='',seriesZh='';
+  INDEX.forEach(x=>{
+    if(x.id!=='character'&&x.id!=='copyright') return;
+    if(x.id==='character'&&char) return;
+    if(x.id==='copyright'&&series) return;
+    let m=false;
+    if(x.zhL && x.zhL.length>=2 && s.includes(x.zhL)){
+      if(/[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]/.test(x.zhL)) m=true;
+      else if(new RegExp('(^|[^a-z0-9])'+esc(x.zhL)+'([^a-z0-9]|$)').test(s)) m=true;
+    }
+    if(!m && x.enL && x.enL.length>=3 && s.includes(x.enL) && new RegExp('(^|[^a-z])'+esc(x.enL)+'([^a-z]|$)').test(s)) m=true;
+    if(!m) return;
+    if(x.id==='character'){
+      const ser=(x.en.match(/\(([^()]+)\)\s*$/)||[])[1];
+      if(CHL[x.enL]||goreListed(ser)){ char=x.en; charZh=x.zh; }
+    } else if(goreListed(x.en)){ series=x.en; seriesZh=x.zh; }
+  });
+  if(!char){ const keys=Object.keys(CHL); for(let i=0;i<keys.length;i++){ if(wordIn(keys[i])){ char=CHL[keys[i]]; break; } } }
+  if(!series){ const G2=SC.goreOnly; const pats=(G2.series||[]).slice(); if(G2.useAuto) (G2.seriesAuto||[]).forEach(x=>pats.push(x+'*')); for(let i=0;i<pats.length;i++){ const k=pats[i].replace(/\*$/,'').trim(); if(k&&wordIn(k)){ series=k; break; } } }
+  if(!char&&!series) return null;
+  return { tag:char||series, tagZh:charZh||seriesZh||(char||series), count:(+G.count||1), withChar:!!G.withCharacter };
+}
+function gorePicks(rule){
+  const out=[];
+  if(rule.withChar) out.push({id:'character',cat:'角色/作品',en:rule.tag,zh:rule.tagZh});
+  const list=Array.isArray(window.GORE_COMBOS)?window.GORE_COMBOS:[];
+  for(let i=0;i<rule.count&&list.length;i++){ const c=list[Math.floor(rng()*list.length)]; out.push({id:'gore-combos',cat:'血腥暴力组合',en:c[0],zh:c[1]}); }
+  return out;
+}
+
+document.getElementById('meta').textContent =
+  `（${DATA.length} 类 / ${DATA.reduce((s,c)=>s+c.terms.length,0)} 词）`;
+
+/* ---- 标签切换 ---- */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
+  document.getElementById('tab-gacha').style.display = t.dataset.tab==='gacha'?'':'none';
+  document.getElementById('tab-req').style.display   = t.dataset.tab==='req'?'':'none';
+  if(t.dataset.tab==='req') { loadCards().catch(()=>{}); loadGore().catch(()=>{}); }   // 切到「按需求」时后台预载角色卡与血腥暴力库，首次点击即用
+});
+
+/* ================= 随机抽卡 ================= */
+const BASE = SC.recipeBase;                       // 完整角色配方（来源: 共享常量.json）
+const POOL = SC.recipePool.filter(id=>byId[id]);  // 随机附加池
+const NAMECATS = SC.nameCats;                     // 纯随机默认排除的专有名词类别
+
+const grid = document.getElementById('grid');
+DATA.forEach(c=>{
+  const l=document.createElement('label'); l.title=c.id;
+  const cb=document.createElement('input'); cb.type='checkbox'; cb.value=c.id;
+  if(BASE.includes(c.id)) cb.checked=true;
+  cb.onchange=updateInfo;
+  l.appendChild(cb); l.appendChild(document.createTextNode(`${c.zh} (${c.terms.length})`));
+  grid.appendChild(l);
+});
+function boxes(){return [...grid.querySelectorAll('input')];}
+function setAll(v){boxes().forEach(b=>b.checked=v);updateInfo();}
+function setDefault(){boxes().forEach(b=>b.checked=BASE.includes(b.value));updateInfo();}
+function updateInfo(){document.getElementById('pickinfo').textContent=`已选 ${boxes().filter(b=>b.checked).length} 类`;}
+document.querySelector('#picker .toolbar').addEventListener('click',e=>{
+  const a=e.target.dataset.act; if(!a) return;
+  if(a==='default')setDefault(); else if(a==='all')setAll(true); else setAll(false);
+});
+document.getElementById('mode').addEventListener('change',e=>{
+  document.getElementById('picker').classList.toggle('on', e.target.value==='cats');
+  document.getElementById('combohint').style.display = e.target.value==='combos'?'':'none';
+  document.getElementById('gorehint').style.display = e.target.value==='gore'?'':'none';
+});
+updateInfo();
+
+function hotHint(){document.getElementById('hothint').style.display=HOT_MODE()?'':'none';}
+hotSel.addEventListener('change',hotHint);
+hotW.addEventListener('change',hotHint);
+hotHint();
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let rng = Math.random;
+const seedEl = document.getElementById('seed');
+seedEl.addEventListener('input',()=>{rng = seedEl.value===''?Math.random:mulberry32(+seedEl.value);});
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function pick(id){   // 热度感知：命中池则池内抽（含 √热度加权）；未启用/池空 → 均匀回退
+  const c=byId[id];
+  const p=HOT_MODE()?poolOf(id):null;
+  if(!p) return {id,zh:c.zh,term:c.terms[Math.floor(rng()*c.terms.length)]};
+  let t;
+  if(p.cum){
+    const x=rng()*p.total; let lo=0,hi=p.cum.length-1;
+    while(lo<hi){const mid=(lo+hi)>>1; if(x<p.cum[mid])hi=mid; else lo=mid+1;}
+    t=p.idx[lo];
+  } else t=p.idx[Math.floor(rng()*p.idx.length)];
+  return {id,zh:c.zh,term:c.terms[t]};
+}
+function drawNeg(n){const z=Math.max(0,Math.min(80,n|0));if(!NEG.length||z===0)return [];return shuffle(NEG).slice(0,z).map(t=>({id:'negative',zh:'负面提示词',term:t}));}
+function drawRecipe(negN){const pos=BASE.filter(id=>byId[id]).map(pick);shuffle(POOL).slice(0,2+Math.floor(rng()*3)).forEach(id=>pos.push(pick(id)));return{pos,neg:drawNeg(negN)};}
+function drawCats(ids,negN){return{pos:ids.map(pick),neg:drawNeg(negN)};}
+function drawAll(n,negN){
+  if(!HOT_MODE()){
+    const flat=[];DATA.forEach(c=>{if(c.id==='negative'||NAMECATS.includes(c.id))return;c.terms.forEach(t=>flat.push({id:c.id,zh:c.zh,term:t}));});const pos=[];for(let i=0;i<n;i++)pos.push(flat[Math.floor(rng()*flat.length)]);return{pos,neg:drawNeg(negN)};
+  }
+  /* 热度态：类别按候选数占比 → 类内按池规则抽（与全词扁平均匀同分布） */
+  const ids=[]; const cum=[]; let total=0;
+  DATA.forEach(c=>{
+    if(c.id==='negative'||NAMECATS.includes(c.id))return;
+    const p=poolOf(c.id); if(!p) return;   // 该类达到阈值 0 个 → 跳过
+    total+=p.idx.length; cum.push(total); ids.push(c.id);
+  });
+  const pos=[];
+  for(let i=0;i<n;i++){
+    if(!ids.length)break;
+    const x=rng()*total; let k=0; while(cum[k]<x)k++;
+    pos.push(pick(ids[k]));
+  }
+  return{pos,neg:drawNeg(negN)};
+}
+const joinEn=s=>s.map(p=>p.term[0]).join(', ');
+const joinZh=s=>s.map(p=>p.term[1]).join('，');
+
+function copy(txt,btn,label){
+  const done=()=>{btn.textContent='已复制✓';setTimeout(()=>btn.textContent=label,900);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(()=>fallback());}else{fallback();}
+  function fallback(){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}ta.remove();done();}
+}
+
+function render(sets){
+  const box=document.getElementById('results'); box.innerHTML='';
+  sets.forEach((set,idx)=>{
+    const card=document.createElement('div'); card.className='card';
+    const rows=set.pos.map(p=>`<tr><td class="k">${p.zh}</td><td class="v"><b>${p.term[0]}</b> <i>${p.term[1]}</i></td></tr>`).join('');
+    card.innerHTML=`
+      <div class="head"><span class="no">第 ${idx+1} 套</span>
+        <span><button class="mini c-pos">复制正向</button> <button class="mini c-neg">复制反向</button></span></div>
+      <div class="sec pos"><div class="ttl"><span class="dot"></span>正向提示词</div>
+        <div class="en">${joinEn(set.pos)}</div><div class="zh">${joinZh(set.pos)}</div></div>
+      <div class="sec neg"><div class="ttl"><span class="dot"></span>反向提示词</div>
+        <div class="en">${joinEn(set.neg)||'（无）'}</div><div class="zh">${joinZh(set.neg)}</div></div>
+      <details><summary>正向明细</summary><table>${rows}</table></details>`;
+    card.querySelector('.c-pos').onclick=e=>copy(joinEn(set.pos),e.target,'复制正向');
+    card.querySelector('.c-neg').onclick=e=>copy(joinEn(set.neg),e.target,'复制反向');
+    box.appendChild(card);
+  });
+  box._last = sets.map(s=>`正向: ${joinEn(s.pos)}\n反向: ${joinEn(s.neg)}`).join('\n\n');
+}
+document.getElementById('draw').addEventListener('click',()=>{
+  if(seedEl.value!=='') rng=mulberry32(+seedEl.value);
+  const mode=document.getElementById('mode').value;
+  const n=Math.max(1,Math.min(30,+document.getElementById('count').value||1));
+  const negN=+document.getElementById('negcount').value||0;
+  const btn=document.getElementById('draw'); btn.classList.add('spin'); setTimeout(()=>btn.classList.remove('spin'),600);
+  let sets=[];
+  if(mode==='recipe'){for(let i=0;i<n;i++)sets.push(drawRecipe(negN));}
+  else if(mode==='cats'){const ids=boxes().filter(b=>b.checked).map(b=>b.value).filter(id=>id!=='negative');if(!ids.length){alert('请至少选择一个类别');return;}for(let i=0;i<n;i++)sets.push(drawCats(ids,negN));}
+  else if(mode==='combos'){
+    loadCombos().then(list=>{
+      if(!list.length){alert('组合库为空：请先运行 _build\\build-combos.ps1 生成 组合库数据.js');return;}
+      const idxs=shuffle(list.map((_,i)=>i));
+      const out=[];
+      for(let i=0;i<n;i++){const c=list[idxs[i%idxs.length]];out.push({pos:[{id:'erotic-combos',zh:'情色组合',term:[c[0],c[1]]}],neg:drawNeg(negN)});}
+      render(out);
+    }).catch(err=>alert('加载组合库失败：'+(err&&err.message||err)));
+    return;
+  }
+  else if(mode==='gore'){
+    loadGore().then(()=>{
+      const list=Array.isArray(window.GORE_COMBOS)?window.GORE_COMBOS:[];
+      if(!list.length){alert('血腥暴力库为空：请先运行 _build\\build-combos.ps1 -Src 血腥暴力组合库.xml …（或检查 血腥组合库数据.js）');return;}
+      const idxs=shuffle(list.map((_,i)=>i));
+      const out=[];
+      for(let i=0;i<n;i++){const c=list[idxs[i%idxs.length]];out.push({pos:[{id:'gore-combos',zh:'血腥暴力组合',term:[c[0],c[1]]}],neg:drawNeg(negN)});}
+      render(out);
+    }).catch(err=>alert('加载血腥暴力库失败：'+(err&&err.message||err)));
+    return;
+  }
+  else sets=[drawAll(n,negN)];
+  render(sets);
+});
+document.getElementById('copyAll').addEventListener('click',()=>{const el=document.getElementById('results');if(!el._last)return;copy(el._last,document.getElementById('copyAll'),'复制全部');});
+
+/* ================= 按需求出词（支持整句） ================= */
+const INDEX = [];
+DATA.forEach(c=>{if(c.id==='negative')return;c.terms.forEach(t=>INDEX.push({cat:c.zh,id:c.id,en:t[0],zh:t[1],enL:t[0].toLowerCase(),zhL:t[1].toLowerCase()}));});
+
+/* ================= 换装：服装类词判定 ================= */
+const WEAR_IDS = new Set(SC.wearIds);   // 服装/制服类（来源: 共享常量.json）
+const WEAR_EN = new Set(); const WEAR_ZH = new Set();
+DATA.forEach(c=>{ if(WEAR_IDS.has(c.id)) c.terms.forEach(t=>{ WEAR_EN.add(String(t[0]).toLowerCase()); WEAR_ZH.add(String(t[1]).toLowerCase()); }); });
+const WEAR_KW = new RegExp(SC.wearKw);   // 服装关键词（来源: 共享常量.json）
+function isWearToken(t){const l=String(t||'').toLowerCase().trim();return !!l && (WEAR_EN.has(l)||WEAR_ZH.has(l)||WEAR_KW.test(l));}
+function stripWear(en){
+  return String(en||'').split(',').map(x=>x.trim()).filter(Boolean).filter(t=>!isWearToken(t)).join(', ');
+}
+function tokenize(s){return s.split(/[\s,，、;；/|]+/).map(x=>x.trim()).filter(Boolean);}
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function csNeg(useCore,n){
+  if(useCore) return CORE.map(e=>({en:e,zh:''}));
+  const z=Math.max(0,Math.min(80,n|0)); return z?shuffle(NEG).slice(0,z).map(t=>({en:t[0],zh:t[1]})):[];
+}
+const SYN = {}; SC.syn.forEach(p=>SYN[p[0]]=p[1]);   // 中文俗名 -> 标准名（有序键值对，来源: 共享常量.json）
+
+/* ================= 角色特征明细 + 纯特征版（老模型用；规则与命令行版一致，来源 共享常量.json） ================= */
+function normFeat(s){return String(s||'').replace(/\\/g,'').replace(/_/g,' ').replace(/\s+/g,' ').trim().toLowerCase();}
+const FEAT_GROUP={}; const FEAT_ORDER=[];
+(SC.featureGroups||[]).forEach(g=>{FEAT_ORDER.push(g[0]); g[1].forEach(id=>{if(!(id in FEAT_GROUP)) FEAT_GROUP[id]=g[0];});});
+const FEAT_PREFIX=(SC.featurePrefixes||[]).map(p=>[p[0],String(p[1])]);
+const FEAT_KW=(SC.featureKw||[]).map(p=>[p[0],new Set((p[1]||[]).map(x=>String(x).toLowerCase()))]);
+const FEAT_KEEP=new Set((SC.featureKeep||[]).map(normFeat));
+const WEAR_GRP=((SC.featureGroups||[]).filter(g=>g[1].indexOf('top-wear')>=0)[0]||[''])[0];   // 服饰组名（按 top-wear 反查，跟随改名）
+let _featIdx=null;
+function featIndex(){   // en -> {id, zh}；负向词优先（纠错词靠这条剔除），featureKeep 里的同名词按正向处理
+  if(_featIdx) return _featIdx;
+  const m=new Map();
+  DATA.forEach(c=>{ if(c.id==='negative') return; c.terms.forEach(t=>{const k=normFeat(t[0]); if(k&&!m.has(k)) m.set(k,{id:c.id,zh:t[1]});}); });
+  (byId['negative']?byId['negative'].terms:[]).forEach(t=>{const k=normFeat(t[0]); if(k&&!FEAT_KEEP.has(k)) m.set(k,{id:'negative',zh:t[1]});});
+  _featIdx=m; return m;
+}
+function stripWearZh(c){   // 换装时卡片自带的中文串仍含原服装词：按被剔除的英文词，把对应中文一并去掉（只删一份、保原序）
+  const idx=featIndex(); const drops=[];
+  String(c.prompt_en||'').split(',').forEach(x=>{
+    const raw=x.trim(); if(!raw||!isWearToken(raw)) return;
+    const info=idx.get(normFeat(raw)); if(info&&info.zh) drops.push(info.zh);
+  });
+  return String(c.prompt_zh||'').split(/[，,]/).map(s=>s.trim()).filter(Boolean).filter(z=>{
+    const i=drops.indexOf(z); if(i>=0){ drops.splice(i,1); return false; } return true;
+  });
+}
+function featureInfo(src, card){
+  const idx=featIndex();
+  const skip=new Set(['masterpiece','best quality','ultra-detailed']);
+  skip.add(normFeat(card.name_en)); if(card.series_en) skip.add(normFeat(card.series_en));
+  const buckets={}; const keptEn=[]; const keptZh=[]; const negHit=[]; let other=0;
+  String(src||'').split(',').forEach(x=>{
+    const raw=x.trim(); if(!raw) return;
+    const k=normFeat(raw); if(!k||skip.has(k)) return;
+    const info=idx.get(k); const id=info?info.id:''; const zh=info?info.zh:'';
+    if(id==='negative'){negHit.push(raw); return;}
+    let grp='';
+    if(id){ grp=FEAT_GROUP[id]||''; if(!grp){ for(const p of FEAT_PREFIX){ if(id.indexOf(p[1])===0){grp=p[0];break;} } } }
+    else { grp='未归类'; }                       // 词库里查不到 → 无法判定，保留
+    if(!grp){other++; return;}                    // 词库里有、但不是外观特征 → 剔除
+    for(const p of FEAT_KW){ let hit=false; for(const w of k.split(/[^a-z0-9]+/)){ if(w&&p[1].has(w)){hit=true;break;} } if(hit){grp=p[0];break;} }
+    (buckets[grp]=buckets[grp]||[]).push(zh?`${raw} ${zh}`:raw);
+    keptEn.push(raw); keptZh.push(zh||raw);
+  });
+  return {buckets,keptEn,keptZh,negHit,other};
+}
+function featureHtml(cards, srcList, outfit){
+  return cards.map((c,i)=>{
+    const f=featureInfo(srcList&&srcList[i]!==undefined?srcList[i]:c.prompt_en, c);
+    if(!f.keptEn.length) return '';
+    // 点名服装并入「服饰」组（与上面已换装的整卡提示词保持一致）
+    if(outfit && outfit.length && WEAR_GRP){
+      (f.buckets[WEAR_GRP]=f.buckets[WEAR_GRP]||[]);
+      outfit.forEach(o=>{ f.buckets[WEAR_GRP].push(o.zh?`${o.en} ${o.zh}`:o.en); f.keptEn.push(o.en); f.keptZh.push(o.zh||o.en); });
+    }
+    const seq=FEAT_ORDER.filter(g=>f.buckets[g]).concat(f.buckets['未归类']?['未归类']:[]);
+    const rows=seq.map(g=>`<div class="kw"><span class="h">${g}</span><span class="m">${f.buckets[g].join(' / ')}</span></div>`).join('');
+    let drop='';
+    if(f.negHit.length||f.other){
+      const parts=[];
+      if(f.negHit.length) parts.push(`纠错/负向词 ${f.negHit.slice(0,6).join(', ')}${f.negHit.length>6?` 等 ${f.negHit.length} 个`:''}`);
+      if(f.other) parts.push(`非外观词（姿势/场景/情色/作品等）${f.other} 个`);
+      drop=`<div class="hint">⚠ 已剔除：${parts.join('；')}</div>`;
+    }
+    const title=`${c.name_zh||''} ${c.name_en||''}`.trim();
+    const noStrip=!(outfit&&outfit.length);
+    const fanEn=(noStrip&&c.features_en)?c.features_en:f.keptEn.join(', ');
+    const fanZh=(noStrip&&c.features_en)?(c.features_zh||c.features_en):f.keptZh.join('，');
+    return `<details open class="feat"><summary>🧩 角色特征 · 老模型用（不认角色名就照这个画）· ${title}</summary>
+      ${rows}${drop}
+      <div class="sec pos"><div class="ttl"><span class="dot"></span>纯特征版 <button class="mini c-feat">复制纯特征版</button></div>
+        <div class="en">masterpiece, best quality, ultra-detailed, ${fanEn}</div>
+        <div class="zh">杰作，最佳画质，超精细，${fanZh}</div></div>
+    </details>`;
+  }).join('');
+}
+function analyze(raw){
+  const seen=new Set(); const posList=[]; const add=x=>{if(!seen.has(x.en)){seen.add(x.en);posList.push(x);}};
+  const s=raw.toLowerCase();
+  INDEX.forEach(x=>{
+    let m=false;
+    if(x.zhL && x.zhL.length>=2 && s.includes(x.zhL)){
+      if(/[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]/.test(x.zhL)) m=true;
+      else if(new RegExp('(^|[^a-z0-9])'+esc(x.zhL)+'([^a-z0-9]|$)').test(s)) m=true;
+    }
+    if(!m && x.enL && x.enL.length>=3 && s.includes(x.enL) && new RegExp('(^|[^a-z])'+esc(x.enL)+'([^a-z]|$)').test(s)) m=true;
+    if(m) add(x);
+  });
+  const matched=[];
+  Object.keys(SYN).sort((a,b)=>b.length-a.length).forEach(k=>{
+    if(!s.includes(k)) return;
+    if(matched.some(m=>m.includes(k))) return;
+    matched.push(k);
+    const can=SYN[k].toLowerCase(); const x=INDEX.find(e=>e.zhL===can); if(x) add(x);
+  });
+  return {posList};
+}
+function matchCards(raw){
+  const s=raw.toLowerCase();
+  const hits=[];
+  CARDS.forEach(c=>{
+    const keys=[c.name_en,c.name_zh,c.id].concat(c.aliases||[]);
+    let best='';
+    keys.forEach(k=>{const t=String(k||'').toLowerCase().trim(); if(t.length>=2 && s.includes(t) && t.length>best.length) best=t;});
+    if(best) hits.push({c,best});
+  });
+  hits.sort((a,b)=>b.best.length-a.best.length
+    || (String(a.c.name_en||'').split('(').length-String(b.c.name_en||'').split('(').length));
+  const kept=[];
+  hits.forEach(h=>{
+    // 别名只是普通服装词、且存在更具体的角色命中 → 视为服装，不当角色卡
+    if(isWearToken(h.best) && hits.some(o=>o!==h && !isWearToken(o.best) && o.best.length>h.best.length)) return;
+    if(!kept.some(k=>k.best===h.best || k.best.includes(h.best))) kept.push(h);
+  });
+  return kept.map(h=>h.c);
+}
+/* ---- 联动词：句子里命中某类词就补上它标志性的词（来源: 共享常量.json 的 linkRules，与命令行/组合生成同一张表） ---- */
+let _byCatId=null;
+function catIdxById(){
+  if(_byCatId) return _byCatId;
+  _byCatId={};
+  INDEX.forEach((x,i)=>{ (_byCatId[x.id]=_byCatId[x.id]||[]).push(i); });
+  return _byCatId;
+}
+function linkApply(list){
+  const LR=(SC.linkRules&&SC.linkRules.rules)||[];
+  if(!LR.length) return list;
+  const out=list.slice();
+  const haveEn=new Set(out.map(p=>String(p.en).toLowerCase()));
+  const haveIds=new Set(out.map(p=>p.id));
+  const by=catIdxById();
+  LR.forEach(rl=>{
+    let trig=false;
+    (rl.when||[]).forEach(w=>{ if(haveIds.has(w)) trig=true; });
+    if(!trig && rl.whenWords){
+      const ws=(rl.whenWords||[]).map(x=>String(x).toLowerCase());
+      out.forEach(p=>{ if(ws.includes(String(p.en).toLowerCase())||ws.includes(String(p.zh).toLowerCase())) trig=true; });
+    }
+    if(!trig && rl.whenRx){ const rx=new RegExp(String(rl.whenRx)); out.forEach(p=>{ if(rx.test(String(p.en).toLowerCase())) trig=true; }); }
+    if(!trig) return;
+    let cand=[];
+    (rl.cats||[]).forEach(c=>{ (by[c]||[]).forEach(i=>cand.push(i)); });
+    if(!cand.length) return;
+    if(rl.prefer){ const rx=new RegExp(String(rl.prefer.join('|'))); const f=cand.filter(i=>rx.test(INDEX[i].enL)); if(f.length) cand=f; }
+    for(let k=0;k<(+rl.count||1);k++){
+      for(let t=0;t<14;t++){
+        const x=INDEX[cand[Math.floor(rng()*cand.length)]];
+        if(haveEn.has(String(x.en).toLowerCase())) continue;
+        haveEn.add(String(x.en).toLowerCase());
+        out.push({id:x.id,cat:'联动·'+rl.name,en:x.en,zh:x.zh});
+        break;
+      }
+    }
+  });
+  return out;
+}
+
+function renderRequest(raw){
+  const box=document.getElementById('qresults'); box.innerHTML='';
+  const rule=goreRule(raw);
+  const useCore=document.getElementById('qcore').checked;
+  const negList=csNeg(useCore,+document.getElementById('qneg').value||0);
+  const negEn=negList.map(p=>p.en).join(', ');
+  const negZh=negList.map(p=>p.zh).join('，');
+  const cards=rule?[]:matchCards(raw);
+  let scan=raw.toLowerCase();
+  const cardTokens=new Set();
+  cards.forEach(c=>{
+    String(c.prompt_en||'').split(',').forEach(x=>{const t=x.trim().toLowerCase(); if(t)cardTokens.add(t);});
+    [c.name_en,c.name_zh,c.id].concat(c.aliases||[]).map(k=>String(k||'').toLowerCase().trim()).filter(k=>k.length>=2).sort((a,b)=>b.length-a.length).forEach(k=>{scan=scan.split(k).join(' ');});
+  });
+  const {posList}=analyze(cards.length?scan:raw);
+  const extra=rule?gorePicks(rule):linkApply(posList.filter(p=>!cardTokens.has(p.en.toLowerCase())));
+  const outfit=extra.filter(p=>WEAR_IDS.has(p.id));   // 你输入里点名的服装/制服
+  const strip=outfit.length>0;                        // 有换装需求时才剔除角色卡原服装
+  const posEn=cards.map(c=>strip?stripWear(c.prompt_en):c.prompt_en).concat(extra.map(p=>p.en)).join(', ');
+  const cardZh=strip?cards.map(c=>stripWearZh(c).join('，')).filter(Boolean):cards.map(c=>c.prompt_zh).filter(Boolean);
+  const posZh=cardZh.concat(extra.map(p=>p.zh)).join('，');
+  const groups={}; extra.forEach(p=>{(groups[p.cat]=groups[p.cat]||[]).push(p);});
+  const ghtml=Object.keys(groups).map(cat=>`<div class="kw"><span class="h">${cat}</span><span class="m">${groups[cat].map(p=>p.en).join(' / ')}</span></div>`).join('');
+  const head=rule?`🩸 血腥暴力提示词（女性向/男同系列规则）`:cards.length?`🎭 角色卡命中（${cards.length}）${strip?'·已换装':''}${extra.length?` + 附加拆解（${extra.length}）`:''}`:`拆解结果（命中 ${extra.length} 词）`;
+  const kw=rule?`<div class="kw"><span class="h">⚠ 女性向/男同（乙游·BL）系列角色</span> <span class="m">按设定只输出血腥暴力提示词（含杀害 / 秀色），不做情色拆解</span></div>`:cards.length?`<div class="kw"><span class="h">${cards.map(c=>`${c.name_zh||''} ${c.name_en||''}`.trim()).join(' / ')}</span> <span class="m">${cards.map(c=>c.note||'').filter(Boolean).join('；')}</span></div>`:'';
+  const outfitHint=strip?`<div class="hint">🔁 已换装：用「${outfit.map(p=>p.en).join(' / ')}」替换角色卡原有服装（原服装词已移除）。</div>`:'';
+  const featSrc=cards.map(c=>strip?stripWear(c.prompt_en):c.prompt_en);
+  const featHtml=cards.length?featureHtml(cards,featSrc,outfit):'';
+  const extraHtml=extra.length?`<details open><summary>${cards.length?'附加拆解':'命中明细'}（${extra.length}）</summary>${ghtml}</details>`:(cards.length?'':'<div class="hint">没有识别到词库中的词，试试更常见/更具体的中文词，如 银发、猫耳、泳装、害羞。</div>');
+  const card=document.createElement('div'); card.className='card';
+  card.innerHTML=`
+    <div class="head"><span class="no">${head}</span>
+      <span><button class="mini c-pos">复制正向</button> <button class="mini c-neg">复制反向</button> <button class="mini c-both">复制正+反</button></span></div>
+    ${kw}
+    ${outfitHint}
+    <div class="sec pos"><div class="ttl"><span class="dot"></span>正向提示词</div>
+      <div class="en">${posEn||'（无命中）'}</div><div class="zh">${posZh}</div></div>
+    <div class="sec neg"><div class="ttl"><span class="dot"></span>反向提示词</div>
+      <div class="en">${negEn||'（无）'}</div><div class="zh">${negZh}</div></div>
+    ${extraHtml}
+    ${featHtml}`;
+  card.querySelector('.c-pos').onclick=e=>copy(posEn,e.target,'复制正向');
+  card.querySelector('.c-neg').onclick=e=>copy(negEn,e.target,'复制反向');
+  card.querySelector('.c-both').onclick=e=>copy(`正向: ${posEn}\n反向: ${negEn}`,e.target,'复制正+反');
+  card.querySelectorAll('details.feat').forEach(d=>{
+    const b=d.querySelector('.c-feat'); if(b) b.onclick=e=>copy(d.querySelector('.en').textContent,e.target,'复制纯特征版');
+  });
+  box.appendChild(card);
+}
+document.getElementById('genq').addEventListener('click',()=>{
+  const raw=(document.getElementById('qtext').value||'').trim();
+  if(!raw){alert('请输入你的要求');return;}
+  const btn=document.getElementById('genq'), label=btn.textContent;
+  btn.disabled=true; btn.textContent='加载角色卡…';
+  Promise.all([loadCards().catch(()=>[]),loadGore().catch(()=>false)]).then(()=>{ btn.disabled=false; btn.textContent=label; renderRequest(raw); });
+});
+document.getElementById('qclear').addEventListener('click',()=>{document.getElementById('qtext').value='';document.getElementById('qresults').innerHTML='';});
+
+document.getElementById('draw').click();
+</script>
+</body>
+</html>

@@ -1,0 +1,907 @@
+﻿// 自动生成，请勿手改。单一来源: 抽卡\共享常量.json
+// 修改常量后运行: powershell -File _build\build-constants.ps1
+window.SHARED_CONSTANTS = {
+    "core":  [
+                 "worst quality",
+                 "low quality",
+                 "normal quality",
+                 "lowres",
+                 "low resolution",
+                 "blurry",
+                 "jpeg artifacts",
+                 "noise",
+                 "watermark",
+                 "signature",
+                 "text",
+                 "username",
+                 "logo",
+                 "artist name",
+                 "date",
+                 "cropped",
+                 "out of frame",
+                 "cut off",
+                 "bad anatomy",
+                 "bad hands",
+                 "bad fingers",
+                 "bad face",
+                 "bad eyes",
+                 "bad proportions",
+                 "bad perspective",
+                 "bad composition",
+                 "poorly drawn face",
+                 "poorly drawn hands",
+                 "mutated hands",
+                 "mutated",
+                 "fused fingers",
+                 "extra fingers",
+                 "missing fingers",
+                 "extra digits",
+                 "fewer digits",
+                 "extra limbs",
+                 "missing limbs",
+                 "extra arms",
+                 "extra legs",
+                 "malformed limbs",
+                 "malformed hands",
+                 "deformed",
+                 "disfigured",
+                 "long neck",
+                 "extra hands",
+                 "extra faces",
+                 "duplicate",
+                 "cloned face",
+                 "floating limbs",
+                 "disconnected limbs",
+                 "ugly",
+                 "amateur",
+                 "sketch",
+                 "glitch",
+                 "error",
+                 "messy",
+                 "unfinished",
+                 "out of focus",
+                 "overexposed",
+                 "underexposed",
+                 "motion blur",
+                 "floating hand",
+                 "disembodied hand",
+                 "amputated",
+                 "extra props",
+                 "too many objects",
+                 "film grain",
+                 "noisy"
+             ],
+    "wearIds":  [
+                    "clothing-general",
+                    "top-wear",
+                    "bottom-wear",
+                    "outerwear",
+                    "coat-style",
+                    "sleeves-detail",
+                    "neckline-detail",
+                    "neckwear-collar",
+                    "waist-belt",
+                    "shirt-style",
+                    "skirt-shape",
+                    "pants-shape",
+                    "dress",
+                    "dress-detail",
+                    "dress-types",
+                    "garment-details",
+                    "pattern-fabric",
+                    "fabric-material",
+                    "clothing-damage",
+                    "crossdress",
+                    "underwear",
+                    "lingerie-detail",
+                    "lingerie-material",
+                    "lingerie-style",
+                    "bra-style",
+                    "panty-style",
+                    "legwear",
+                    "stockings-detail",
+                    "stockings-color",
+                    "sock-style",
+                    "footwear",
+                    "shoes-detail",
+                    "heel-style",
+                    "boot-style",
+                    "shoe-material",
+                    "heel-height",
+                    "gloves-armwear",
+                    "glove-style",
+                    "scarf-style",
+                    "headwear-accessory",
+                    "hat-style",
+                    "school-uniform",
+                    "school-swimsuit",
+                    "swimwear",
+                    "swim-detail",
+                    "maid-nurse-service",
+                    "religious-clergy",
+                    "military-police",
+                    "sportswear",
+                    "gym-sport",
+                    "sleepwear",
+                    "denim-street",
+                    "knit-sweater",
+                    "formal-wear",
+                    "uniform-variant",
+                    "cosplay-occupation",
+                    "nurse-detail",
+                    "police-detail",
+                    "bunny-detail",
+                    "shrine-maiden-detail",
+                    "nun-detail",
+                    "idol-detail",
+                    "costume-theme",
+                    "fashion-style",
+                    "lolita",
+                    "lolita-detail",
+                    "gothic-detail",
+                    "wafuku-detail",
+                    "kimono-types",
+                    "traditional-chinese",
+                    "traditional-chinese-detail",
+                    "hanfu-types",
+                    "traditional-japanese",
+                    "traditional-japanese-detail",
+                    "global-costume",
+                    "global-costume-detail"
+                ],
+    "wearKw":  "\\b(dress|dresses|skirt|skirts|shirt|shirts|blouse|blouses|sleeve|sleeves|sweater|sweaters|hoodie|hoodies|jacket|jackets|coat|coats|cardigan|cardigans|vest|vests|waistcoat|uniform|uniforms|kimono|yukata|hakama|hanfu|qipao|cheongsam|sarong|sari|apron|aprons|ribbon|ribbons|necktie|ascot|cravat|tie|bow|bowtie|thighhigh|thighhighs|pantyhose|stocking|stockings|sock|socks|shoe|shoes|boot|boots|sandal|sandals|heel|heels|glove|gloves|hat|cap|bonnet|scarf|shawl|collar|belt|bikini|swimsuit|swimwear|leotard|lingerie|bra|panties|underwear|clothes|clothing|outfit|maid|nurse|robe|jumpsuit|overalls|dungarees|shorts|jeans|trousers|slacks|pants|legwear|suspenders|garter|choker|headband|hairband|goggles|corset|bustier|chemise|nightgown|negligee|pajamas|pyjamas|onesie|cape|cloak|bloomers|tanktop|halter|turtleneck|bodysuit|tights|bodystocking|armlet|obi|purse|bag|umbrella)\\b",
+    "syn":  [
+                [
+                    "死库水",
+                    "学校泳衣"
+                ],
+                [
+                    "校园泳装",
+                    "学校泳衣"
+                ],
+                [
+                    "丝袜",
+                    "连裤袜"
+                ],
+                [
+                    "白丝",
+                    "白色连裤袜"
+                ],
+                [
+                    "黑丝",
+                    "黑色连裤袜"
+                ],
+                [
+                    "白丝袜",
+                    "白色连裤袜"
+                ],
+                [
+                    "黑丝袜",
+                    "黑色连裤袜"
+                ],
+                [
+                    "白裤袜",
+                    "白色连裤袜"
+                ],
+                [
+                    "黑裤袜",
+                    "黑色连裤袜"
+                ],
+                [
+                    "过膝袜",
+                    "大腿袜"
+                ],
+                [
+                    "短袜",
+                    "袜子"
+                ],
+                [
+                    "裸足",
+                    "赤足"
+                ],
+                [
+                    "赤脚",
+                    "赤足"
+                ],
+                [
+                    "泳衣",
+                    "泳装"
+                ]
+            ],
+    "recipeBase":  [
+                       "count",
+                       "age",
+                       "hair-style",
+                       "hair-color",
+                       "eye",
+                       "face-expression",
+                       "body",
+                       "top-wear",
+                       "bottom-wear",
+                       "footwear",
+                       "pose-gesture",
+                       "background",
+                       "lighting",
+                       "mood",
+                       "quality"
+                   ],
+    "recipePool":  [
+                       "skin",
+                       "legwear",
+                       "underwear",
+                       "headwear-accessory",
+                       "jewelry",
+                       "neckwear-collar",
+                       "waist-belt",
+                       "gloves-armwear",
+                       "cosplay-occupation",
+                       "archetype",
+                       "body-marking",
+                       "nsfw-rating",
+                       "hair-detail-2",
+                       "skin-detail"
+                   ],
+    "nameCats":  [
+                     "character",
+                     "artist",
+                     "copyright"
+                 ],
+    "featureKeep":  [
+                        "green skin",
+                        "schoolgirl"
+                    ],
+    "featureKw":  [
+                      [
+                          "耳朵 / 尾巴 / 特殊体征",
+                          [
+                              "ear",
+                              "ears",
+                              "tail",
+                              "tails",
+                              "horn",
+                              "horns",
+                              "wing",
+                              "wings",
+                              "halo",
+                              "halos",
+                              "antenna",
+                              "antennae",
+                              "tentacle",
+                              "tentacles",
+                              "fin",
+                              "fins",
+                              "claw",
+                              "claws",
+                              "fang",
+                              "fangs",
+                              "paw",
+                              "paws",
+                              "scale",
+                              "scales",
+                              "carapace",
+                              "snout",
+                              "muzzle",
+                              "hoof",
+                              "hooves"
+                          ]
+                      ],
+                      [
+                          "眼睛",
+                          [
+                              "pupil",
+                              "pupils",
+                              "iris",
+                              "sclera",
+                              "eyelash",
+                              "eyelashes",
+                              "eyebrow",
+                              "eyebrows",
+                              "heterochromia"
+                          ]
+                      ]
+                  ],
+    "featurePrefixes":  [
+                            [
+                                "五官 / 表情",
+                                "expr-"
+                            ],
+                            [
+                                "耳朵 / 尾巴 / 特殊体征",
+                                "mod-"
+                            ]
+                        ],
+    "featureGroups":  [
+                          [
+                              "人数",
+                              [
+                                  "count"
+                              ]
+                          ],
+                          [
+                              "发色 / 发型",
+                              [
+                                  "hair-color",
+                                  "hair-style",
+                                  "hair-detail-2",
+                                  "hair-updo-detail",
+                                  "body-hair"
+                              ]
+                          ],
+                          [
+                              "眼睛",
+                              [
+                                  "eye",
+                                  "eye-detail-2"
+                              ]
+                          ],
+                          [
+                              "五官 / 表情",
+                              [
+                                  "face-parts",
+                                  "face-expression"
+                              ]
+                          ],
+                          [
+                              "体型 / 肤色",
+                              [
+                                  "body",
+                                  "body-upper",
+                                  "body-lower",
+                                  "body-shape-2",
+                                  "breast-detail",
+                                  "cup-size",
+                                  "belly-detail",
+                                  "extra-body",
+                                  "skin",
+                                  "skin-detail",
+                                  "body-marking",
+                                  "age",
+                                  "age-change",
+                                  "butt-thigh-focus",
+                                  "hands-detail",
+                                  "feet-detail",
+                                  "armpit-detail"
+                              ]
+                          ],
+                          [
+                              "耳朵 / 尾巴 / 特殊体征",
+                              [
+                                  "furry-kemono",
+                                  "monster-features",
+                                  "monster-features-2",
+                                  "monster-species",
+                                  "monster-species-extra",
+                                  "monster-species-3",
+                                  "monster-species-4",
+                                  "mod-species",
+                                  "mod-appendages",
+                                  "mod-head-face",
+                                  "mod-skin",
+                                  "mod-lower-body",
+                                  "mod-limbs",
+                                  "mod-breast",
+                                  "mod-mermaid",
+                                  "mod-beastification",
+                                  "mecha-robot",
+                                  "mecha-detail"
+                              ]
+                          ],
+                          [
+                              "服饰",
+                              [
+                                  "clothing-general",
+                                  "top-wear",
+                                  "bottom-wear",
+                                  "outerwear",
+                                  "coat-style",
+                                  "shirt-style",
+                                  "sleeves-detail",
+                                  "neckline-detail",
+                                  "neckwear-collar",
+                                  "skirt-shape",
+                                  "pants-shape",
+                                  "dress",
+                                  "dress-detail",
+                                  "dress-types",
+                                  "garment-details",
+                                  "pattern-fabric",
+                                  "fabric-material",
+                                  "clothing-damage",
+                                  "crossdress",
+                                  "uniform-variant",
+                                  "school-uniform",
+                                  "school-swimsuit",
+                                  "swimwear",
+                                  "swim-detail",
+                                  "sportswear",
+                                  "gym-sport",
+                                  "sleepwear",
+                                  "denim-street",
+                                  "knit-sweater",
+                                  "formal-wear",
+                                  "fashion-style",
+                                  "costume-theme",
+                                  "underwear",
+                                  "lingerie-detail",
+                                  "lingerie-material",
+                                  "lingerie-style",
+                                  "bra-style",
+                                  "panty-style",
+                                  "legwear",
+                                  "stockings-detail",
+                                  "stockings-color",
+                                  "sock-style",
+                                  "footwear",
+                                  "shoes-detail",
+                                  "heel-style",
+                                  "boot-style",
+                                  "shoe-material",
+                                  "heel-height",
+                                  "gloves-armwear",
+                                  "glove-style",
+                                  "scarf-style",
+                                  "lolita",
+                                  "lolita-detail",
+                                  "gothic-detail",
+                                  "wafuku-detail",
+                                  "kimono-types",
+                                  "hanfu-types",
+                                  "traditional-chinese",
+                                  "traditional-chinese-detail",
+                                  "traditional-japanese",
+                                  "traditional-japanese-detail",
+                                  "global-costume",
+                                  "global-costume-detail"
+                              ]
+                          ],
+                          [
+                              "配饰 / 道具",
+                              [
+                                  "headwear-accessory",
+                                  "hat-style",
+                                  "waist-belt",
+                                  "jewelry",
+                                  "necklace-detail",
+                                  "earrings-detail",
+                                  "ring-detail",
+                                  "bracelet-detail",
+                                  "headpiece-detail",
+                                  "brooch-pin",
+                                  "bag-style",
+                                  "bags-holding",
+                                  "props",
+                                  "props-detail",
+                                  "weapon-detail",
+                                  "eyewear-detail",
+                                  "makeup-detail"
+                              ]
+                          ],
+                          [
+                              "身份 / 职业",
+                              [
+                                  "cosplay-occupation",
+                                  "maid-nurse-service",
+                                  "religious-clergy",
+                                  "military-police",
+                                  "nurse-detail",
+                                  "police-detail",
+                                  "bunny-detail",
+                                  "shrine-maiden-detail",
+                                  "nun-detail",
+                                  "idol-detail",
+                                  "magical-girl",
+                                  "magical-girl-detail",
+                                  "occupation-2",
+                                  "occupation-fantasy",
+                                  "occupation-service",
+                                  "occupation-medical",
+                                  "occupation-media"
+                              ]
+                          ],
+                          [
+                              "其他外观",
+                              [
+                                  "archetype",
+                                  "archetype-appearance"
+                              ]
+                          ]
+                      ],
+    "goreOnly":  {
+                     "_note":  "女性向 / 乙游 / BL 游戏 + 全男系列的角色：按设定只输出血腥暴力提示词，不做情色拆解。series = 内置乙游/BL 游戏名单（与 build-cards.ps1 共用）；seriesAuto = 自动判定全男系列快照；useAuto=false 就只认 series。count = 输出几条血腥暴力组合；withCharacter = 是否带上命中的角色/作品 tag。",
+                     "enabled":  true,
+                     "series":  [
+                                    "touken ranbu*",
+                                    "ensemble stars*",
+                                    "twisted-wonderland*",
+                                    "hypnosis mic*",
+                                    "idolmaster side-m*",
+                                    "idolish7*",
+                                    "a3!*",
+                                    "obey me*",
+                                    "mystic messenger*",
+                                    "tears of themis*",
+                                    "mr. love*",
+                                    "mr love*",
+                                    "uta no prince-sama*",
+                                    "diabolik lovers*",
+                                    "hakuouki*",
+                                    "amnesia*",
+                                    "brothers conflict*",
+                                    "ikemen*",
+                                    "nu: carnival*",
+                                    "nu carnival*",
+                                    "king of prism*",
+                                    "b-project*",
+                                    "helios rising heroes*",
+                                    "paradox live*",
+                                    "promise of wizard*",
+                                    "tsukiuta*",
+                                    "tsukipro*",
+                                    "meiji tokyo renka*",
+                                    "starmyu*",
+                                    "dream festival*",
+                                    "scared rider xechs*",
+                                    "idolmaster shining colors*",
+                                    "idolmaster cinderella girls: starlight stage*"
+                                ],
+                     "seriesAuto":  [
+                                        "akuma shitsuji to kuroi neko",
+                                        "another eidos-r",
+                                        "assassin\u0027s creed (series)",
+                                        "bacchikoi!",
+                                        "blue lock",
+                                        "breaking bad",
+                                        "bungou to alchemist",
+                                        "code: kite",
+                                        "cool doji danshi",
+                                        "crave saga",
+                                        "dankira!!!",
+                                        "dislyte",
+                                        "dramatical murder",
+                                        "ensemble stars!",
+                                        "ero condo",
+                                        "free!",
+                                        "fumetsu no anata e",
+                                        "given",
+                                        "gyee",
+                                        "hikaru no go",
+                                        "holostars",
+                                        "hypnosis mic",
+                                        "i-chu",
+                                        "idolish7",
+                                        "jock studio (blits games)",
+                                        "kaiji",
+                                        "live a hero",
+                                        "love and deepspace",
+                                        "mahoutsukai no yakusoku",
+                                        "marumaru no shuyaku wa wareware da!",
+                                        "minecraft youtube",
+                                        "natsume yuujinchou",
+                                        "nu carnival",
+                                        "paradox live",
+                                        "rakudai ninja rantarou",
+                                        "ryuu ga gotoku (series)",
+                                        "shuuen no virche",
+                                        "sk8 the infinity",
+                                        "slam dunk (series)",
+                                        "strawberry prince",
+                                        "tennis no ouji-sama",
+                                        "the evil within",
+                                        "the tale of food",
+                                        "tokyo afterschool summoners",
+                                        "tokyo revengers",
+                                        "touken ranbu",
+                                        "twisted wonderland",
+                                        "uta no prince-sama",
+                                        "vinland saga",
+                                        "wind breaker (nii satoru)"
+                                    ],
+                     "useAuto":  true,
+                     "count":  1,
+                     "withCharacter":  true,
+                     "catIds":  [
+                                    "gore-combos"
+                                ]
+                 },
+    "wipeTerms":  {
+                      "_note":  "黑名单词条：任何模式都不进正向提示词（学生泳衣上写名字的框/名牌这类）。组合库入库时也会被整条剔掉（负面提示词类别不受影响）。改完跑 _build\\build-constants.ps1 出网页常量；组合库要重新入库（或在定制里重生成）才生效。要加就加英文 tag，大小写不敏感。",
+                      "terms":  [
+                                    "name tag",
+                                    "chest name tag",
+                                    "nameplate on swimsuit",
+                                    "class number on swimsuit",
+                                    "nameplate"
+                                ]
+                  },
+    "linkRules":  {
+                      "_note":  "联动词：命中左边 when（按需求=句子里命中的词条属于这些类别；组合库=组合里已有这些类别的词）就自动补上右边 count 个词，cats 是要取的类别，prefer 里的关键词优先。命令行、网页、组合生成共用这一张表。改完跑 _build\\build-constants.ps1；组合库要重生成才带新联动。",
+                      "rules":  [
+                                    {
+                                        "name":  "触手缠绕四肢躯干",
+                                        "when":  [
+                                                     "monster-tentacle",
+                                                     "tentacle-monster",
+                                                     "tentacle-suit"
+                                                 ],
+                                        "whenWords":  [
+                                                          "tentacle",
+                                                          "tentacles",
+                                                          "触手",
+                                                          "触手缠绕",
+                                                          "触手拘束"
+                                                      ],
+                                        "whenRx":  "tentacle",
+                                        "cats":  [
+                                                     "tentacle-monster",
+                                                     "monster-tentacle"
+                                                 ],
+                                        "count":  2,
+                                        "prefer":  [
+                                                       "holding",
+                                                       "restrain",
+                                                       "restraint",
+                                                       "around",
+                                                       "coil",
+                                                       "wrapping",
+                                                       "suspended",
+                                                       "on breasts",
+                                                       "under clothes",
+                                                       "through clothes",
+                                                       "legs",
+                                                       "waist",
+                                                       "arms",
+                                                       "torso",
+                                                       "grabbing"
+                                                   ]
+                                    },
+                                    {
+                                        "name":  "触手动作内射产卵",
+                                        "when":  [
+                                                     "monster-tentacle",
+                                                     "tentacle-monster",
+                                                     "tentacle-suit"
+                                                 ],
+                                        "whenWords":  [
+                                                          "tentacle",
+                                                          "tentacles",
+                                                          "触手"
+                                                      ],
+                                        "whenRx":  "tentacle",
+                                        "cats":  [
+                                                     "tentacle-monster",
+                                                     "monster-tentacle"
+                                                 ],
+                                        "count":  1,
+                                        "prefer":  [
+                                                       "in mouth",
+                                                       "suckers",
+                                                       "bulge",
+                                                       "oviposition",
+                                                       "egg laying",
+                                                       "in pussy",
+                                                       "in ass",
+                                                       "in womb",
+                                                       "through body",
+                                                       "insertion",
+                                                       "penetration",
+                                                       "double",
+                                                       "multiple tentacles",
+                                                       "many tentacles"
+                                                   ]
+                                    },
+                                    {
+                                        "name":  "调教高潮脸",
+                                        "when":  [
+                                                     "training",
+                                                     "training-detail",
+                                                     "development",
+                                                     "bondage",
+                                                     "bdsm-scene",
+                                                     "domination-role"
+                                                 ],
+                                        "whenWords":  [
+                                                          "training",
+                                                          "sex training",
+                                                          "slave training",
+                                                          "slut training",
+                                                          "bdsm",
+                                                          "bondage",
+                                                          "discipline",
+                                                          "conditioning",
+                                                          "corruption",
+                                                          "mind break",
+                                                          "submission",
+                                                          "obedience",
+                                                          "orgasm control",
+                                                          "orgasm denial",
+                                                          "调教",
+                                                          "性调教",
+                                                          "性奴调教",
+                                                          "服从训练",
+                                                          "驯化",
+                                                          "开发",
+                                                          "身体开发",
+                                                          "感度训练",
+                                                          "高潮调教",
+                                                          "开发调教"
+                                                      ],
+                                        "whenRx":  "training|bdsm|bondage|discipline|conditioning|corruption|mind break|submission|submitting|obedience|slave|humiliation|degradation|punish|overstimulation|orgasm control|orgasm denial|leash|collar|pet play|torture|rope|restrain|shackl|handcuff|cuff|gag|suspension|harness",
+                                        "cats":  [
+                                                     "ahegao-orgasm",
+                                                     "orgasm-forms",
+                                                     "orgasm-reaction-2",
+                                                     "expr-lust"
+                                                 ],
+                                        "count":  2,
+                                        "prefer":  [
+                                                       "ahegao",
+                                                       "orgasm face",
+                                                       "ecstasy face",
+                                                       "rolling eyes",
+                                                       "eyes rolling",
+                                                       "tongue out",
+                                                       "mind break",
+                                                       "broken expression",
+                                                       "empty eyes",
+                                                       "half lidded",
+                                                       "half-closed",
+                                                       "pleasure face"
+                                                   ]
+                                    },
+                                    {
+                                        "name":  "生理崩坏反应",
+                                        "when":  [
+                                                     "training",
+                                                     "training-detail",
+                                                     "development",
+                                                     "bondage",
+                                                     "bdsm-scene",
+                                                     "domination-role",
+                                                     "ahegao-orgasm",
+                                                     "orgasm-forms"
+                                                 ],
+                                        "whenWords":  [
+                                                          "orgasm",
+                                                          "climax",
+                                                          "ahegao",
+                                                          "orgasm face",
+                                                          "高潮",
+                                                          "绝顶",
+                                                          "阿黑颜"
+                                                      ],
+                                        "whenRx":  "training|bdsm|bondage|discipline|conditioning|corruption|mind break|submission|obedience|slave|humiliation|degradation|punish|orgasm|climax|ahegao|leash|collar|rope|restrain|shackl|handcuff|cuff|gag|suspension|harness|tentacle",
+                                        "cats":  [
+                                                     "orgasm-reaction",
+                                                     "orgasm-reaction-2",
+                                                     "face-expression",
+                                                     "extra-action",
+                                                     "fluids"
+                                                 ],
+                                        "count":  2,
+                                        "prefer":  [
+                                                       "blush",
+                                                       "tear",
+                                                       "drool",
+                                                       "saliva",
+                                                       "open mouth",
+                                                       "tongue",
+                                                       "moan",
+                                                       "pant",
+                                                       "broken",
+                                                       "convuls",
+                                                       "arch",
+                                                       "trembl",
+                                                       "spasm",
+                                                       "squirm",
+                                                       "twitch"
+                                                   ]
+                                    },
+                                    {
+                                        "name":  "拘束姿势",
+                                        "when":  [
+                                                     "bondage",
+                                                     "bdsm-scene",
+                                                     "toy-rope",
+                                                     "toy-metal-restraint",
+                                                     "domination-role",
+                                                     "monster-tentacle",
+                                                     "tentacle-monster"
+                                                 ],
+                                        "whenWords":  [
+                                                          "bound arms",
+                                                          "spread legs",
+                                                          "restraint",
+                                                          "束缚",
+                                                          "拘束",
+                                                          "缚"
+                                                      ],
+                                        "whenRx":  "tentacle|training|bdsm|bondage|discipline|collar|leash|rope|restrain|shackl|handcuff|cuff|gag|suspension|harness",
+                                        "cats":  [
+                                                     "bondage",
+                                                     "pose-gesture",
+                                                     "position"
+                                                 ],
+                                        "count":  1,
+                                        "prefer":  [
+                                                       "arms behind",
+                                                       "bound",
+                                                       "spread",
+                                                       "forced",
+                                                       "kneel",
+                                                       "toes curling",
+                                                       "harness",
+                                                       "shibari",
+                                                       "suspension",
+                                                       "cuff",
+                                                       "shackl"
+                                                   ]
+                                    },
+                                    {
+                                        "name":  "水体湿润细节",
+                                        "when":  [
+                                                     "swimwear",
+                                                     "school-swimsuit",
+                                                     "swim-detail",
+                                                     "bg-nature"
+                                                 ],
+                                        "whenWords":  [
+                                                          "pool",
+                                                          "underwater",
+                                                          "wet",
+                                                          "water",
+                                                          "水",
+                                                          "泳",
+                                                          "泡",
+                                                          "湿",
+                                                          "浴室",
+                                                          "淋浴"
+                                                      ],
+                                        "whenRx":  "water|underwater|wet|pool|swim|bubble|slime|slimy|slick|soaked|drenched|淋浴|泳池|水下",
+                                        "cats":  [
+                                                     "fluids",
+                                                     "texture-detail",
+                                                     "sweat-wet",
+                                                     "effects",
+                                                     "lighting",
+                                                     "composition"
+                                                 ],
+                                        "count":  2,
+                                        "prefer":  [
+                                                       "water",
+                                                       "underwater",
+                                                       "wet",
+                                                       "droplet",
+                                                       "slime",
+                                                       "slimy",
+                                                       "slick",
+                                                       "bubble",
+                                                       "pool",
+                                                       "reflection",
+                                                       "refraction",
+                                                       "caustic",
+                                                       "depth of field",
+                                                       "rim light",
+                                                       "glisten"
+                                                   ]
+                                    }
+                                ]
+                  },
+    "hotTiers":  [
+                     [
+                         0,
+                         "全部"
+                     ],
+                     [
+                         100,
+                         "≥100"
+                     ],
+                     [
+                         1000,
+                         "热门 ≥1000"
+                     ],
+                     [
+                         10000,
+                         "爆款 ≥10000"
+                     ]
+                 ]
+};

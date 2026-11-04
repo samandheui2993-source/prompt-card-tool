@@ -1,0 +1,716 @@
+# 女性向 / 乙游 / BL 游戏·全男系列角色：按设定只输出血腥暴力提示词
+# 角色tag<TAB>系列tag（由 _build\build-gore-chars.ps1 生成，改名单请改 抽卡\共享常量.json 的 goreOnly）
+ammon lead	akuma shitsuji to kuroi neko
+lamli bennett	akuma shitsuji to kuroi neko
+boschi arenas	akuma shitsuji to kuroi neko
+nac stein	akuma shitsuji to kuroi neko
+lato bacca	akuma shitsuji to kuroi neko
+flure garcia	akuma shitsuji to kuroi neko
+berrien cliane	akuma shitsuji to kuroi neko
+lucas thompscie	akuma shitsuji to kuroi neko
+heroine \(amnesia\)	amnesia (idea factory)
+ikki \(amnesia\)	amnesia (idea factory)
+orion \(amnesia\)	amnesia (idea factory)
+shin \(amnesia\)	amnesia (idea factory)
+toma \(amnesia\)	amnesia (idea factory)
+dyne \(another eidos\)	another eidos-r
+sigvaldi \(another eidos\)	another eidos-r
+yuno \(another eidos\)	another eidos-r
+xiaolong \(another eidos\)	another eidos-r
+thorkell \(another eidos\)	another eidos-r
+pugi \(another eidos\)	another eidos-r
+ezio auditore da firenze	assassin's creed (series)
+altair ibn la-ahad	assassin's creed (series)
+edward kenway	assassin's creed (series)
+arno dorian	assassin's creed (series)
+connor kenway	assassin's creed (series)
+tadano genji	bacchikoi!
+yanai ichiru	bacchikoi!
+nakahara masaru	bacchikoi!
+kanada toshu	bacchikoi!
+isagi yoichi	blue lock
+nagi seishirou	blue lock
+bachira meguru	blue lock
+mikage reo	blue lock
+michael kaiser	blue lock
+chigiri hyoma	blue lock
+itoshi rin	blue lock
+itoshi sae	blue lock
+you hiori	blue lock
+kurona ranze	blue lock
+ashu yuuta	b-project
+aizome kento	b-project
+walter white	breaking bad
+jesse pinkman	breaking bad
+saul goodman	breaking bad
+hagiwara sakutarou \(bungou to alchemist\)	bungou to alchemist
+tanizaki junichirou \(bungou to alchemist\)	bungou to alchemist
+dazai osamu \(bungou to alchemist\)	bungou to alchemist
+akutagawa ryuunosuke \(bungou to alchemist\)	bungou to alchemist
+sun ce \(code: kite\)	code: kite
+fu rong \(code: kite\)	code: kite
+yuan ji	code: kite
+mima takayuki	cool doji danshi
+ichikura hayate	cool doji danshi
+shiki souma	cool doji danshi
+futami shun	cool doji danshi
+protagonist \(crave saga\)	crave saga
+gae bolg \(crave saga\)	crave saga
+bergamond \(crave saga\)	crave saga
+excalibur \(crave saga\)	crave saga
+jeron \(crave saga\)	crave saga
+zark \(crave saga\)	crave saga
+yata no kagami \(crave saga\)	crave saga
+tsubaki seito	dankira!!!
+miki nozomu	dankira!!!
+hinata mahiru	dankira!!!
+komori yui	diabolik lovers
+jin qiu \(ru shou) (dislyte\)	dislyte
+freddy \(fenrir) (dislyte\)	dislyte
+javid \(shamash) (dislyte\)	dislyte
+seragaki aoba	dramatical murder
+ren \(dramatical murder\)	dramatical murder
+koujaku	dramatical murder
+noiz \(dramatical murder\)	dramatical murder
+clear \(dramatical murder\)	dramatical murder
+kagehira mika	ensemble stars!
+himemiya tori	ensemble stars!
+itsuki shu	ensemble stars!
+sakuma ritsu	ensemble stars!
+tenshouin eichi	ensemble stars!
+shino hajime	ensemble stars!
+anzu \(ensemble stars!\)	ensemble stars!
+sakuma rei \(ensemble stars!\)	ensemble stars!
+morisawa chiaki	ensemble stars!
+hibiki wataru	ensemble stars!
+saegusa ibara	ensemble stars!
+amagi hiiro	ensemble stars!
+ran nagisa	ensemble stars!
+tsukinaga leo	ensemble stars!
+amagi rinne	ensemble stars!
+shiratori aira \(ensemble stars!\)	ensemble stars!
+nito nazuna	ensemble stars!
+shinkai kanata	ensemble stars!
+sena izumi \(ensemble stars!\)	ensemble stars!
+isara mao	ensemble stars!
+tomoe hiyori	ensemble stars!
+suou tsukasa	ensemble stars!
+shiina niki	ensemble stars!
+sakasaki natsume	ensemble stars!
+takamine midori	ensemble stars!
+ayase mayoi	ensemble stars!
+sengoku shinobu	ensemble stars!
+kanzaki souma	ensemble stars!
+sazanami jun	ensemble stars!
+oukawa kohaku	ensemble stars!
+fushimi yuzuru	ensemble stars!
+narukami arashi	ensemble stars!
+aoba tsumugi	ensemble stars!
+mashiro tomoya	ensemble stars!
+harukawa sora	ensemble stars!
+hakaze kaoru	ensemble stars!
+himeru \(ensemble stars!\)	ensemble stars!
+aoi hinata	ensemble stars!
+akehoshi subaru	ensemble stars!
+aoi yuta	ensemble stars!
+otogari adonis	ensemble stars!
+nagumo tetora	ensemble stars!
+tenma mitsuru	ensemble stars!
+yuuki makoto \(ensemble stars!\)	ensemble stars!
+mikejima madara	ensemble stars!
+kiryu kuro	ensemble stars!
+ogami koga	ensemble stars!
+hasumi keito	ensemble stars!
+sagiri esu	ensemble stars!
+kazehaya tatsumi	ensemble stars!
+punt \(kienbiu\)	ero condo
+nguyen hoan \(ero condo\)	ero condo
+wey \(ero condo\)	ero condo
+da thach \(kienbiu\)	ero condo
+suplex \(ero condo\)	ero condo
+tachibana makoto	free!
+nanase haruka \(free!\)	free!
+matsuoka rin	free!
+matsuoka gou	free!
+hazuki nagisa	free!
+yamazaki sousuke	free!
+ryuugazaki rei	free!
+nitori aiichirou	free!
+shigino kisumi	free!
+kirishima ikuya	free!
+the nameless boy \(fumetsu no anata e\)	fumetsu no anata e
+joan \(fumetsu no anata e\)	fumetsu no anata e
+fushi	fumetsu no anata e
+murata ugetsu	given
+kaji akihiko	given
+satou mafuyu	given
+uenoyama ritsuka	given
+kashima hiiragi \(given\)	given
+yoshida yuki \(given\)	given
+alca \(wakatanka4\)	gyee
+romg	gyee
+priapus a. tarou	gyee
+bernard \(gyee\)	gyee
+eddie \(gyee\)	gyee
+delafere \(gyee\)	gyee
+raikoh \(paradiso guardian\)	gyee
+bidziil \(gyee\)	gyee
+alca the lion	gyee
+lan \(gyee\)	gyee
+antonio \(gyee\)	gyee
+rand \(gyee\)	gyee
+vundo \(gyee\)	gyee
+sig \(gyee\)	gyee
+markus \(gyee\)	gyee
+kamui \(gyee\)	gyee
+billy \(gyee\)	gyee
+izumi \(gyee\)	gyee
+carter \(gyee\)	gyee
+takashi \(gyee\)	gyee
+kong \(gyee\)	gyee
+yan \(gyee\)	gyee
+musso \(gyee\)	gyee
+miles \(gyee\)	gyee
+rudolf \(gyee\)	gyee
+niko \(na insoo\)	gyee
+lee \(gyee\)	gyee
+yukimura chizuru	hakuouki shinsengumi kitan
+saitou hajime \(hakuouki\)	hakuouki shinsengumi kitan
+okita souji \(hakuouki\)	hakuouki shinsengumi kitan
+otori akira	helios rising heroes
+shindou hikaru	hikaru no go
+fujiwara no sai	hikaru no go
+touya akira	hikaru no go
+gavis bettel	holostars
+kageyama shien	holostars
+astel leda	holostars
+hanasaki miyabi	holostars
+machina x flayon	holostars
+regis altare	holostars
+kanade izuru	holostars
+axel syrios	holostars
+aragami oga	holostars
+banzoin hakka	holostars
+yukoku roberu	holostars
+kishido temma	holostars
+arurandeisu	holostars
+rikka \(holostars\)	holostars
+josuiji shinri	holostars
+magni dezmond	holostars
+phantom \(gavis bettel\)	holostars
+yatogami fuma	holostars
+minase rio	holostars
+noir vesper	holostars
+hizaki gamma	holostars
+utsugi uyu	holostars
+gavis bettel \(1st costume\)	holostars
+kagami kira	holostars
+poruneu	holostars
+daidou shinove	holostars
+altventurer \(regis altare\)	holostars
+hiyamaru	holostars
+spanner \(holostars\)	holostars
+kanade izuru \(1st costume\)	holostars
+goldbullet	holostars
+machiroon \(machina x flayon\)	holostars
+koipanion \(josuiji shinri\)	holostars
+jyako \(utsugi uyu\)	holostars
+kishido temma \(1st costume\)	holostars
+axelotl \(axel syrios\)	holostars
+axel syrios \(1st costume\)	holostars
+octavio	holostars
+minase rio \(2nd costume\)	holostars
+minase rio \(1st costume\)	holostars
+luca \(minase rio\)	holostars
+hanasaki miyabi \(4th costume\)	holostars
+hanasaki miyabi \(1st costume\)	holostars
+kyomu suzume	holostars
+hanasaki miyabi \(5th costume\)	holostars
+gavis bettel \(2nd costume\)	holostars
+bettelion \(gavis bettel\)	holostars
+jerry \(gavis bettel\)	holostars
+kageyama shien \(1st costume\)	holostars
+nekoyama shien	holostars
+machina x flayon \(1st costume\)	holostars
+r-trus \(machina x flayon\)	holostars
+machina x flayon \(2nd costume\)	holostars
+magmite \(magni dezmond\)	holostars
+hakkito \(banzoin hakka\)	holostars
+banzoin hakka \(1st costume\)	holostars
+banzoin hakka \(2nd costume\)	holostars
+noir vesper \(old design\)	holostars
+crimzon ruze	holostars
+tsukishita kaoru	holostars
+jurard t rexford	holostars
+kotatsu \(yatogami fuma\)	holostars
+amemura ramuda	hypnosis mic
+kannonzaka doppo	hypnosis mic
+arisugawa dice	hypnosis mic
+jinguji jakurai	hypnosis mic
+busujima rio mason	hypnosis mic
+harai kuko	hypnosis mic
+aohitsugi samatoki	hypnosis mic
+iruma jyuto	hypnosis mic
+yumeno gentaro	hypnosis mic
+amaguni hitoya	hypnosis mic
+yamada saburo	hypnosis mic
+yamada jiro	hypnosis mic
+yamada ichiro	hypnosis mic
+izanami hifumi	hypnosis mic
+oikawa momosuke	i-chu
+ricky \(i-chu\)	i-chu
+hanabusa kokoro	i-chu
+eva armstrong	i-chu
+sammy \(i-chu\)	i-chu
+nanase riku	idolish7
+kujou tenn	idolish7
+osaka sougo	idolish7
+yotsuba tamaki	idolish7
+momo \(idolish7\)	idolish7
+izumi iori	idolish7
+yuki \(idolish7\)	idolish7
+natsume minami	idolish7
+tsunashi ryuunosuke	idolish7
+isumi haruka	idolish7
+takanashi tsumugi	idolish7
+avan geiserford	jock studio (blits games)
+derek kingsfield	jock studio (blits games)
+bryce callahan	jock studio (blits games)
+nakajima yuuto	jock studio (blits games)
+leo mendez \(jock studio\)	jock studio (blits games)
+itou kaiji	kaiji
+ichijou seiya	kaiji
+tonegawa yukio	kaiji
+murakami tamotsu	kaiji
+endou yuuji	kaiji
+the bog \(kaiji\)	kaiji
+hyoudou kazuya	kaiji
+akashi \(live a hero\)	live a hero
+male protagonist \(live a hero\)	live a hero
+ryekie \(live a hero\)	live a hero
+nessen \(live a hero\)	live a hero
+kyoichi \(live a hero\)	live a hero
+gaius \(live a hero\)	live a hero
+tsuneaki \(live a hero\)	live a hero
+kyoichi \(active agent) (live a hero\)	live a hero
+lilac \(live a hero\)	live a hero
+gomeisa \(live a hero\)	live a hero
+yohack	live a hero
+barrel \(cool gunfighter) (live a hero\)	live a hero
+pubraseer \(live a hero\)	live a hero
+barrel \(live a hero\)	live a hero
+obsidius \(live a hero\)	live a hero
+astosis \(live a hero\)	live a hero
+gammei \(live a hero\)	live a hero
+shidemasu \(live a hero\)	live a hero
+tadakono okitaka \(live a hero\)	live a hero
+santetsu \(live a hero\)	live a hero
+yoshiori \(live a hero\)	live a hero
+shaft \(live a hero\)	live a hero
+polaris mask \(live a hero\)	live a hero
+grigory \(live a hero\)	live a hero
+akashi \(alter) (live a hero\)	live a hero
+astar \(live a hero\)	live a hero
+akashi \(water bullet) (live a hero\)	live a hero
+ryekie \(drunk tiger) (live a hero\)	live a hero
+rexer \(live a hero\)	live a hero
+protagonist \(love and deepspace\)	love and deepspace
+sylus \(love and deepspace\)	love and deepspace
+xavier \(love and deepspace\)	love and deepspace
+zayne \(love and deepspace\)	love and deepspace
+rafayel \(love and deepspace\)	love and deepspace
+caleb \(love and deepspace\)	love and deepspace
+murr hart	mahoutsukai no yakusoku
+riquet \(mahoutsukai no yakusoku\)	mahoutsukai no yakusoku
+figaro garcia	mahoutsukai no yakusoku
+owen \(mahoutsukai no yakusoku\)	mahoutsukai no yakusoku
+cain knightley	mahoutsukai no yakusoku
+faust lavinia	mahoutsukai no yakusoku
+shino sherwood	mahoutsukai no yakusoku
+heathcliff blanchett	mahoutsukai no yakusoku
+rutile flores	mahoutsukai no yakusoku
+nero turner	mahoutsukai no yakusoku
+shaoron	marumaru no shuyaku wa wareware da!
+roboro	marumaru no shuyaku wa wareware da!
+zom	marumaru no shuyaku wa wareware da!
+technoblade	minecraft youtube
+grian \(youtuber\)	minecraft youtube
+ranboo	minecraft youtube
+goodtimeswithscar	minecraft youtube
+quackity	minecraft youtube
+wilbur soot	minecraft youtube
+ph1lza	minecraft youtube
+dream \(youtuber\)	minecraft youtube
+natsume takashi	natsume yuujinchou
+nyanko-sensei	natsume yuujinchou
+madara \(natsume yuujinchou\)	natsume yuujinchou
+eiden \(nu carnival\)	nu carnival
+kuya \(nu carnival\)	nu carnival
+edmond \(nu carnival\)	nu carnival
+quincy \(nu carnival\)	nu carnival
+yakumo \(nu carnival\)	nu carnival
+olivine \(nu carnival\)	nu carnival
+dante \(nu carnival\)	nu carnival
+topper \(nu carnival\)	nu carnival
+morvay \(nu carnival\)	nu carnival
+blade \(nu carnival\)	nu carnival
+father \(nu carnival\)	nu carnival
+rei \(nu carnival\)	nu carnival
+aster \(nu carnival\)	nu carnival
+garu \(nu carnival\)	nu carnival
+yatonokami kanata	paradox live
+yatonokami nayuta	paradox live
+maruyama reo	paradox live
+inukai yuto	paradox live
+rokuta \(paradox live\)	paradox live
+miyama kei	paradox live
+itsuki \(paradox live\)	paradox live
+zenpouji isaku	rakudai ninja rantarou
+kukuchi heisuke	rakudai ninja rantarou
+tachibana senzou	rakudai ninja rantarou
+ayabe kihachirou	rakudai ninja rantarou
+kiryu kazuma	ryuu ga gotoku (series)
+majima goro	ryuu ga gotoku (series)
+kasuga ichiban	ryuu ga gotoku (series)
+dojima daigo	ryuu ga gotoku (series)
+nishikiyama akira	ryuu ga gotoku (series)
+adachi koichi	ryuu ga gotoku (series)
+lucas proust	shuuen no virche
+scien brofiise	shuuen no virche
+ankou \(shuuen no virche\)	shuuen no virche
+kyan reki	sk8 the infinity
+hasegawa langa	sk8 the infinity
+joe \(sk8\)	sk8 the infinity
+cherry blossom \(sk8\)	sk8 the infinity
+adam \(sk8\)	sk8 the infinity
+sakuragi hanamichi	slam dunk (series)
+rukawa kaede	slam dunk (series)
+miyagi ryouta	slam dunk (series)
+mitsui hisashi	slam dunk (series)
+sawakita eiji	slam dunk (series)
+mito youhei	slam dunk (series)
+kogure kiminobu	slam dunk (series)
+fukatsu kazunari	slam dunk (series)
+akagi takenori	slam dunk (series)
+akagi haruko	slam dunk (series)
+colon \(stpri\)	strawberry prince
+rinu \(stpri\)	strawberry prince
+satomi \(stpri\)	strawberry prince
+root \(stpri\)	strawberry prince
+rosa \(tears of themis\)	tears of themis
+luke pearce \(tears of themis\)	tears of themis
+marius von hagen \(tears of themis\)	tears of themis
+artem wing \(tears of themis\)	tears of themis
+vyn richter \(tears of themis\)	tears of themis
+atobe keigo	tennis no ouji-sama
+sengoku kiyosumi	tennis no ouji-sama
+echizen ryooma	tennis no ouji-sama
+yukimura seiichi	tennis no ouji-sama
+mizuki hajime	tennis no ouji-sama
+joseph oda	the evil within
+sebastian castellanos	the evil within
+the keeper	the evil within
+ruvik	the evil within
+longjing shrimp \(the tale of food\)	the tale of food
+candied ginkgo nut \(the tale of food\)	the tale of food
+dezhou chicken \(the tale of food\)	the tale of food
+yipin pot \(the tale of food\)	the tale of food
+male master \(the tale of food\)	the tale of food
+buddha's temptation \(the tale of food\)	the tale of food
+lianhua blood duck \(the tale of food\)	the tale of food
+swallow bun \(the tale of food\)	the tale of food
+cabbage blossom \(the tale of food\)	the tale of food
+female master \(the tale of food\)	the tale of food
+protagonist 3 \(housamo\)	tokyo afterschool summoners
+zabaniyya \(housamo\)	tokyo afterschool summoners
+wakan tanka	tokyo afterschool summoners
+ikusaba daisuke	tokyo afterschool summoners
+tamamura gunzo	tokyo afterschool summoners
+takemaru \(housamo\)	tokyo afterschool summoners
+aegir \(housamo\)	tokyo afterschool summoners
+shennong \(housamo\)	tokyo afterschool summoners
+protagonist 2 \(housamo\)	tokyo afterschool summoners
+protagonist 4 \(housamo\)	tokyo afterschool summoners
+motoori shiro	tokyo afterschool summoners
+horkeu kamui	tokyo afterschool summoners
+houzouin oniwaka	tokyo afterschool summoners
+takabushi kengo	tokyo afterschool summoners
+tajikarao \(housamo\)	tokyo afterschool summoners
+arsalan \(housamo\)	tokyo afterschool summoners
+hephaestus \(housamo\)	tokyo afterschool summoners
+dagon \(housamo\)	tokyo afterschool summoners
+sakimori toji	tokyo afterschool summoners
+taurus mask	tokyo afterschool summoners
+protagonist 1 \(housamo\)	tokyo afterschool summoners
+tangaroa \(housamo\)	tokyo afterschool summoners
+devil \(housamo\)	tokyo afterschool summoners
+akiha gongen \(housamo\)	tokyo afterschool summoners
+gullinbursti \(housamo\)	tokyo afterschool summoners
+boogeyman \(housamo\)	tokyo afterschool summoners
+mononobe kyoma	tokyo afterschool summoners
+protagonist 5 \(housamo\)	tokyo afterschool summoners
+moritaka \(housamo\)	tokyo afterschool summoners
+talos \(housamo\)	tokyo afterschool summoners
+heracles \(housamo\)	tokyo afterschool summoners
+yamasachihiko \(housamo\)	tokyo afterschool summoners
+qinglong \(housamo\)	tokyo afterschool summoners
+claude \(housamo\)	tokyo afterschool summoners
+tuaring \(housamo\)	tokyo afterschool summoners
+yakushimaru ryota	tokyo afterschool summoners
+wakan tanka mugen	tokyo afterschool summoners
+wakan tanka \(fashionista swimsuit\)	tokyo afterschool summoners
+tetsuox \(housamo\)	tokyo afterschool summoners
+ifrit \(housamo\)	tokyo afterschool summoners
+surtr \(housamo\)	tokyo afterschool summoners
+ulaanbaatar \(housamo\)	tokyo afterschool summoners
+hermes \(housamo\)	tokyo afterschool summoners
+tvastar \(housamo\)	tokyo afterschool summoners
+aegir \(swimsuit) (housamo\)	tokyo afterschool summoners
+tangaroa mugen \(housamo\)	tokyo afterschool summoners
+andvari \(housamo\)	tokyo afterschool summoners
+taishakuten \(housamo\)	tokyo afterschool summoners
+israfil \(housamo\)	tokyo afterschool summoners
+shiva \(housamo\)	tokyo afterschool summoners
+macroich \(housamo\)	tokyo afterschool summoners
+yasuyori \(housamo\)	tokyo afterschool summoners
+shino \(housamo\)	tokyo afterschool summoners
+garmr \(housamo\)	tokyo afterschool summoners
+tanetomo \(housamo\)	tokyo afterschool summoners
+cu sith \(housamo\)	tokyo afterschool summoners
+masanori \(housamo\)	tokyo afterschool summoners
+triton \(housamo\)	tokyo afterschool summoners
+catoblepas \(housamo\)	tokyo afterschool summoners
+volos \(housamo\)	tokyo afterschool summoners
+kimun kamui \(housamo\)	tokyo afterschool summoners
+leib \(housamo\)	tokyo afterschool summoners
+ashigara \(housamo\)	tokyo afterschool summoners
+ganglie \(housamo\)	tokyo afterschool summoners
+chernobog \(housamo\)	tokyo afterschool summoners
+tadatomo \(housamo\)	tokyo afterschool summoners
+tanngrisnir \(housamo\)	tokyo afterschool summoners
+salomon \(housamo\)	tokyo afterschool summoners
+behemoth \(housamo\)	tokyo afterschool summoners
+tezcatlipoca \(housamo\)	tokyo afterschool summoners
+agyo \(housamo\)	tokyo afterschool summoners
+bigfoot \(housamo\)	tokyo afterschool summoners
+shennong \(summer) (housamo\)	tokyo afterschool summoners
+gyumao \(housamo\)	tokyo afterschool summoners
+krampus \(housamo\)	tokyo afterschool summoners
+fuxi \(housamo\)	tokyo afterschool summoners
+ophion \(housamo\)	tokyo afterschool summoners
+cthugha \(housamo\)	tokyo afterschool summoners
+zhurong \(housamo\)	tokyo afterschool summoners
+hombre tigre \(housamo\)	tokyo afterschool summoners
+nomad \(housamo\)	tokyo afterschool summoners
+ose \(housamo\)	tokyo afterschool summoners
+oguchi magami	tokyo afterschool summoners
+tsathoggua \(housamo\)	tokyo afterschool summoners
+seth \(housamo\)	tokyo afterschool summoners
+temujin \(housamo\)	tokyo afterschool summoners
+fenrir \(housamo\)	tokyo afterschool summoners
+pollux \(housamo\)	tokyo afterschool summoners
+sanzo \(housamo\)	tokyo afterschool summoners
+snow \(housamo\)	tokyo afterschool summoners
+nether angel \(housamo\)	tokyo afterschool summoners
+kresnik \(housamo\)	tokyo afterschool summoners
+oscar \(housamo\)	tokyo afterschool summoners
+daikoku \(housamo\)	tokyo afterschool summoners
+hogen \(housamo\)	tokyo afterschool summoners
+ded \(housamo\)	tokyo afterschool summoners
+jacob \(housamo\)	tokyo afterschool summoners
+balor \(housamo\)	tokyo afterschool summoners
+sandayu \(housamo\)	tokyo afterschool summoners
+jinn \(housamo\)	tokyo afterschool summoners
+ahura mazda \(housamo\)	tokyo afterschool summoners
+amatsumara \(housamo\)	tokyo afterschool summoners
+sarutahiko \(housamo\)	tokyo afterschool summoners
+wood wrestler \(housamo\)	tokyo afterschool summoners
+loki \(housamo\)	tokyo afterschool summoners
+zao \(housamo\)	tokyo afterschool summoners
+perun \(housamo\)	tokyo afterschool summoners
+yoritomo \(housamo\)	tokyo afterschool summoners
+tomte \(housamo\)	tokyo afterschool summoners
+hippolytus \(housamo\)	tokyo afterschool summoners
+zabaniyya \(halloween) (housamo\)	tokyo afterschool summoners
+tsukuyomi \(housamo\)	tokyo afterschool summoners
+zabaniyya \(fashionista swimsuit) (housamo\)	tokyo afterschool summoners
+zabaniyya \(swimsuit) (housamo\)	tokyo afterschool summoners
+zabaniyya \(fashionista suit) (housamo\)	tokyo afterschool summoners
+shuten douji \(housamo\)	tokyo afterschool summoners
+jiraiya \(housamo\)	tokyo afterschool summoners
+algernon \(housamo\)	tokyo afterschool summoners
+onogami tetsuya	tokyo afterschool summoners
+aizen \(housamo\)	tokyo afterschool summoners
+typhon \(housamo\)	tokyo afterschool summoners
+kajiya kurogane	tokyo afterschool summoners
+macan \(housamo\)	tokyo afterschool summoners
+ooki ikutoshi	tokyo afterschool summoners
+benten \(housamo\)	tokyo afterschool summoners
+arachne \(housamo\)	tokyo afterschool summoners
+hakumen \(housamo\)	tokyo afterschool summoners
+durga \(housamo\)	tokyo afterschool summoners
+ellie \(housamo\)	tokyo afterschool summoners
+melusine \(housamo\)	tokyo afterschool summoners
+ziz \(housamo\)	tokyo afterschool summoners
+maria \(housamo\)	tokyo afterschool summoners
+gorozaemon \(housamo\)	tokyo afterschool summoners
+arc \(housamo\)	tokyo afterschool summoners
+sano manjirou	tokyo revengers
+matsuno chifuyu	tokyo revengers
+sanzu haruchiyo	tokyo revengers
+baji keisuke	tokyo revengers
+hanemiya kazutora	tokyo revengers
+ryuuguuji ken	tokyo revengers
+hanagaki takemichi	tokyo revengers
+inui seishu	tokyo revengers
+haitani rindou	tokyo revengers
+kokonoi hajime	tokyo revengers
+kurokawa izana	tokyo revengers
+mitsuya takashi	tokyo revengers
+haitani ran	tokyo revengers
+hanma shuuji	tokyo revengers
+akashi senju	tokyo revengers
+mikazuki munechika	touken ranbu
+kashuu kiyomitsu	touken ranbu
+yamato-no-kami yasusada	touken ranbu
+tsurumaru kuninaga	touken ranbu
+namazuo toushirou	touken ranbu
+honebami toushirou	touken ranbu
+midare toushirou	touken ranbu
+saniwa \(touken ranbu\)	touken ranbu
+izumi-no-kami kanesada	touken ranbu
+horikawa kunihiro	touken ranbu
+hotarumaru	touken ranbu
+yagen toushirou	touken ranbu
+female saniwa \(touken ranbu\)	touken ranbu
+ichigo hitofuri	touken ranbu
+gokotai	touken ranbu
+shokudaikiri mitsutada	touken ranbu
+kogitsunemaru	touken ranbu
+sayo samonji	touken ranbu
+yamanbagiri kunihiro	touken ranbu
+heshikiri hasebe	touken ranbu
+doudanuki masakuni	touken ranbu
+ima-no-tsurugi	touken ranbu
+ookurikara	touken ranbu
+gokotai's tigers	touken ranbu
+tonbokiri \(touken ranbu\)	touken ranbu
+mutsu-no-kami yoshiyuki	touken ranbu
+atsushi toushirou	touken ranbu
+maeda toushirou	touken ranbu
+akita toushirou	touken ranbu
+iwatooshi	touken ranbu
+kasen kanesada	touken ranbu
+higekiri \(touken ranbu\)	touken ranbu
+hirano toushirou	touken ranbu
+hizamaru \(touken ranbu\)	touken ranbu
+uguisumaru	touken ranbu
+souza samonji	touken ranbu
+kousetsu samonji	touken ranbu
+nakigitsune	touken ranbu
+otegine	touken ranbu
+ishikirimaru	touken ranbu
+shishiou \(touken ranbu\)	touken ranbu
+nakigitsune's fox	touken ranbu
+tarou tachi	touken ranbu
+aizen kunitoshi	touken ranbu
+urashima kotetsu	touken ranbu
+nikkari aoe	touken ranbu
+nagasone kotetsu	touken ranbu
+taikogane sadamune	touken ranbu
+gotou toushirou	touken ranbu
+hakata toushirou	touken ranbu
+jirou tachi	touken ranbu
+shinano toushirou	touken ranbu
+nihongou \(touken ranbu\)	touken ranbu
+hachisuka kotetsu	touken ranbu
+yamabushi kunihiro	touken ranbu
+monoyoshi sadamune	touken ranbu
+konnosuke	touken ranbu
+akashi kuniyuki	touken ranbu
+houchou toushirou	touken ranbu
+shishiou no mofumofu	touken ranbu
+sengo muramasa \(touken ranbu\)	touken ranbu
+fudou yukimitsu	touken ranbu
+kamekichi	touken ranbu
+ookanehira \(touken ranbu\)	touken ranbu
+yamanbagiri chougi	touken ranbu
+little girl saniwa \(touken ranbu\)	touken ranbu
+juzumaru tsunetsugu	touken ranbu
+midare toushirou \(kiwame\)	touken ranbu
+male saniwa \(touken ranbu\)	touken ranbu
+yamanbagiri kunihiro \(kiwame\)	touken ranbu
+chiyoganemaru \(touken ranbu\)	touken ranbu
+izumi-no-kami kanesada \(kiwame\)	touken ranbu
+hyuuga masamune	touken ranbu
+kikkou sadamune	touken ranbu
+ichimonji norimune	touken ranbu
+hakusan yoshimitsu	touken ranbu
+hakusan yoshimitsu's fox	touken ranbu
+kogarasumaru \(touken ranbu\)	touken ranbu
+jikkyuu mitsutada	touken ranbu
+kotegiri gou	touken ranbu
+nankaitarou chouson	touken ranbu
+kyogoku masamune	touken ranbu
+kashuu kiyomitsu \(kiwame\)	touken ranbu
+chatan nakiri \(touken ranbu\)	touken ranbu
+yagen toushirou \(kiwame\)	touken ranbu
+kouryuu kagemitsu	touken ranbu
+heshikiri hasebe \(kiwame\)	touken ranbu
+mouri toushirou	touken ranbu
+sohaya-no-tsurugi	touken ranbu
+shizukagata naginata	touken ranbu
+hizen tadahiro	touken ranbu
+oodenta mitsuyo	touken ranbu
+sanchoumou	touken ranbu
+enemy tantou	touken ranbu
+nansen ichimonji	touken ranbu
+gokotai \(kiwame\)	touken ranbu
+hanjin \(touken ranbu\)	touken ranbu
+saniwa \(katsugeki/touken ranbu\)	touken ranbu
+floyd leech	twisted wonderland
+jade leech	twisted wonderland
+yuu \(twisted wonderland\)	twisted wonderland
+leona kingscholar	twisted wonderland
+azul ashengrotto	twisted wonderland
+idia shroud	twisted wonderland
+riddle rosehearts	twisted wonderland
+lilia vanrouge	twisted wonderland
+malleus draconia	twisted wonderland
+jamil viper	twisted wonderland
+jack howl	twisted wonderland
+ruggie bucchi	twisted wonderland
+grim \(twisted wonderland\)	twisted wonderland
+ace trappola	twisted wonderland
+kalim al-asim	twisted wonderland
+vil schoenheit	twisted wonderland
+ortho shroud	twisted wonderland
+epel felmier	twisted wonderland
+divus crewel	twisted wonderland
+rook hunt	twisted wonderland
+deuce spade	twisted wonderland
+silver \(twisted wonderland\)	twisted wonderland
+cater diamond	twisted wonderland
+trey clover	twisted wonderland
+sebek zigvolt	twisted wonderland
+nanami haruka	uta no prince-sama
+kurusu shou	uta no prince-sama
+shinomiya natsuki \(uta no prince-sama\)	uta no prince-sama
+ichinose tokiya	uta no prince-sama
+ittoki otoya	uta no prince-sama
+hijirikawa masato	uta no prince-sama
+jinguuji ren	uta no prince-sama
+camus \(uta no prince-sama\)	uta no prince-sama
+mikaze ai	uta no prince-sama
+tsukimiya ringo	uta no prince-sama
+mikado nagi	uta no prince-sama
+kotobuki reiji	uta no prince-sama
+thorfinn	vinland saga
+askeladd	vinland saga
+canute	vinland saga
+bjorn \(vinland saga\)	vinland saga
+thorkell	vinland saga
+sakura haruka \(wind breaker\)	wind breaker (nii satoru)
+hayato suou	wind breaker (nii satoru)
+suo hayato	wind breaker (nii satoru)
+togame jou	wind breaker (nii satoru)

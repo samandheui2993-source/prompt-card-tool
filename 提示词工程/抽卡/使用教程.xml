@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tutorial id="prompt-gacha-guide" language="zh-CN" updated="2026-10-22" version="26" title="提示词抽卡 使用教程">
+
+    <intro>
+        本工具从上级目录的词库（优先生效「提示词总库.xml」，其次「提示词对照.xml」）中随机抽取绘图提示词，
+        每次抽取同时给出【正向提示词】与【反向提示词】两部分，可直接粘贴到 Stable Diffusion 等绘图工具。
+        词库 = 原自建 + TagSDanbooru（完整 Danbooru 标签）+ tag.sqlite（Danbooru 全量标签库 33.4 万条，含中文名与热度），
+        现共 349,094 词条（对照）/ 441,439 词条（总库），含中文与别名。
+        提供网页版（抽卡.html）与命令行版（抽卡.ps1 / 抽卡.cmd）两种方式，数据完全一致。
+    </intro>
+
+    <files>
+        <file name="启动网页版.cmd" role="一键启动（推荐）">双击即可用默认浏览器打开网页版，傻瓜式操作。</file>
+        <file name="抽卡.html" role="网页版入口">也可直接双击本文件用浏览器打开，界面抽卡，可分别复制正向 / 反向提示词。</file>
+        <file name="抽卡数据.js" role="网页数据">内嵌词库，由 提示词对照.xml 生成（不含 情色组合 与别名），供 抽卡.html 加载。词条为 [en, zh] 或 [en, zh, 热度]（第三元素 = Danbooru post_count，&gt;0 才带，供「热度」筛选与加权抽卡用；旧代码只读前两个元素，不受影响）。</file>
+        <file name="组合库数据.js" role="组合库数据">情色组合（erotic-combos）整段库，当前 72345 条 / 约 32.5MB，由 _build\build-combos.ps1 入库生成；抽卡.html 在「组合库」模式首次使用时按需加载（本机实测约 1.7 秒），不进 抽卡数据.js，保持网页启动轻量。</file>
+        <file name="血腥组合库数据.js" role="血腥暴力库数据">血腥暴力组合（gore-combos）整段库，当前 20000 条 / 约 4.9MB；网页版「血腥暴力」模式与「按需求」的该类角色规则按需加载。</file>
+        <file name="女性向男同角色.txt / .js" role="该类角色名单">女性向 / 乙游 / BL 游戏·全男系列的角色名单（714 条，命令行用 .txt、网页用 .js），由 _build\build-gore-chars.ps1 从 共享常量.json 的 goreOnly 名单 + 角色卡数据源生成。命中这些角色只输出血腥暴力提示词。</file>
+        <file name="角色卡.js" role="角色卡库">每个角色一条完整复刻提示词；查询命中角色名即整条输出。另嵌构建时算好的「纯特征版」（features_en / features_zh：去角色名/作品名/纠错词，只留外观特征，给不认识该角色的模型照画）。命令行版读取本文件；网页版改为切到「按需求」标签时按需加载（不再拖慢网页启动）。当前 28469 张 / 约 29.6MB。</file>
+        <file name="共享常量.json" role="常量单一来源">反向核心词、服装判定、中文俗名（SYN）、完整角色配方、热度档位（hotTiers）等共享常量只在此维护一份，命令行版直接读取。</file>
+        <file name="共享常量.js" role="常量（网页用）">由 _build\build-constants.ps1 从 共享常量.json 生成，供 抽卡.html 加载（file:// 下无法 fetch，故用脚本标签引入）。</file>
+        <file name="抽卡.ps1" role="命令行主程序（随机）">支持参数与脚本调用，自动到上级目录读取 提示词总库.xml 或 提示词对照.xml。</file>
+        <file name="按需求.ps1" role="命令行主程序（按需求）">根据关键词从词库匹配提示词，输出正向 + 反向。</file>
+        <file name="抽卡.cmd" role="双击启动器">自动以 Bypass 策略运行 抽卡.ps1，免去执行策略限制。</file>
+        <file name="使用教程.xml" role="本文档">使用说明与参数速查。</file>
+    </files>
+
+    <dependencies>
+        <item name="词库">上级目录的 提示词总库.xml（优先）或 提示词对照.xml，含 negative 负面提示词类别；两个脚本会自动寻找本目录或其上级目录。</item>
+        <item name="读取方式">命令行版按需流式读取词库：普通抽卡、按需求、纯随机词都会跳过两个组合库类别（erotic-combos / gore-combos），只有 -Combos / -Gore / -Categories 情色组合·血腥暴力组合 / -ListCategories 才会加载它们。所以组合库涨到 20MB+ 也不会拖慢日常使用。纯随机词与「按需求」都不会把整段组合当单词用。</item>
+        <item name="共享常量">反向核心词、服装关键词、中文俗名（SYN）、完整角色配方等在多处使用，已集中到单一来源 抽卡\共享常量.json；命令行动态读取它，网页读取由 _build\build-constants.ps1 生成的 共享常量.js。改完常量请重跑一次生成脚本。</item>
+        <item name="运行环境">Windows PowerShell 5.1 及以上；网页版只需现代浏览器。</item>
+        <item name="目录约定">_build\ = 构建脚本与数据源（重建词库 / 角色卡 / 常量 / 组合库要用，勿删）；_backup\ = 唯一的备份目录，构建脚本动手前把原文件复制到这里，确认新结果没问题即可整体删除，下次构建会重新生成；_trash\ = 需要时自建的临时回收站，存放明确弃用的旧文件（如 提示词对照.csv / .json、组合库源文件），确认无误即可整个目录删掉。</item>
+    </dependencies>
+
+    <library>
+        <title>词库构成</title>
+        <file name="提示词总库.xml" role="默认词库" count="389 类 / 441439 词">提示词对照 + 情色组合（erotic-combos 72345 条）+ 血腥暴力组合（gore-combos 20000 条）整段组合。命令行版优先读取本文件。</file>
+        <file name="情色提示词组合库.xml" role="组合库（生成产物 + 入库源）" count="1 类 / 72345 词">工程原生格式（&lt;prompt-glossary&gt;&lt;category id="erotic-combos"&gt;&lt;term en="…" zh="…"/&gt;）。每条都是**成场景**的组合，不是随机堆词：主题锚点 + 核心插入 + 拘束 + 反应 + 体液 / 姿势 / 场所 / 服装 / 道具 / 改造 / 特效，词全部取自 提示词对照.xml 的类别。生成器 _build\build-scene-combos.ps1 + 配方 _build\data\scene-slots.json（改口味改配方，改完重跑）；生成结果再交给 _build\build-combos.ps1 入库。也支持手工：直接在 category 里加 &lt;term/&gt;，然后无参运行 _build\build-combos.ps1 并入（别人的 &lt;prompt-library&gt; 格式源文件也一样，-Src 指定）。</file>
+        <file name="提示词对照.xml" role="对照总表" count="387 类 / 349094 词">不含情色/血腥暴力组合；网页数据 抽卡数据.js 由本文件生成。</file>
+        <file name="血腥暴力组合库.xml" role="血腥暴力库（生成产物 + 入库源）" count="1 类 / 20000 词">工程原生格式（&lt;category id="gore-combos"&gt;）。每条必带 伤害出血 + 杀害 + 秀色食人 + 猎奇 + 痛苦反应 + 氛围，再按概率补 凶器 / 绑缚 / 怪物 / 场所 / 服装 / 身体异变 / 特效；覆盖 血腥、暴力、杀害（death/execution/corpse/尸堆/snuff）、秀色（cannibalism/食肉/屠夫/生肉/吞食）。配方 _build\data\scene-slots-gore.json，生成器 _build\build-scene-combos.ps1，入库同 build-combos.ps1。</file>
+        <file name="提示词对照.csv" role="表格导出" count="同上">列：category_id, category_zh, en, zh, alias（别名）。按需生成，当前未保留。</file>
+        <file name="提示词对照.json" role="结构化导出" count="同上">term 含 en / zh / alias（别名）。按需生成，当前未保留。</file>
+        <file name="总目录.xml" role="分类目录">按 27 个分组列出全部类别、中文名与词条数，便于速览。</file>
+        <source>词库 = 原自建词库 + TagSDanbooru（完整 Danbooru 标签，含 通用 / 画师 / 作品 / 角色 / 元 / 指令）+ tag.sqlite（Danbooru 全量标签库，334089 条，含 cn_name 中文名与 post_count 热度）。</source>
+        <new-categories>
+            新增类别：character 角色、artist 画师、copyright 作品IP、meta 元标签、kontext 编辑指令、general-extra 综合标签，
+            以及 情色组合（erotic-combos）、血腥暴力组合（gore-combos）两套整段组合。
+        </new-categories>
+        <alias-note>别名（Danbooru 的替代标签名）保存在 提示词对照.xml / .csv / .json 的 alias 字段；网页数据 抽卡数据.js 为保持轻量不含别名。</alias-note>
+    </library>
+
+    <quickstart>
+        <method name="一键启动网页版" order="1" recommended="true">双击 启动网页版.cmd，浏览器自动打开，点击「抽 卡」按钮即可，得到正向与反向提示词。</method>
+        <method name="网页版（手动）" order="2">双击 抽卡.html，点击「抽 卡」按钮。</method>
+        <method name="命令行" order="3">双击 抽卡.cmd，默认抽 1 套（正向 + 反向）。</method>
+    </quickstart>
+
+    <positive-negative>
+        <positive>正向提示词由所选模式抽出的词条组成，逗号分隔，放进绘图工具的「正向 / Positive」框。</positive>
+        <negative>反向提示词从词库的 negative 类别中随机抽取（共约 194 条），数量由「反向数 / -NegCount」决定（默认 30），放进「反向 / Negative」框。</negative>
+        <note>正反向数量与内容每套独立；设 -NegCount 0 可只出正向，不抽反向。</note>
+    </positive-negative>
+
+    <modes>
+        <mode id="recipe" name="完整角色" recommended="true">
+            从固定的 15 个基础类别各抽 1 个，再随机附加 2 至 4 个出彩类别，组成一整套正向提示词；反向按设定数量抽取。
+            基础类别：count 人数、age 年龄段、hair-style 发型、hair-color 发色、eye 眼睛、face-expression 表情、body 身体特征、top-wear 上装、bottom-wear 下装、footwear 鞋履、pose-gesture 姿势手势、background 背景场景、lighting 光线、mood 氛围、quality 画质。
+        </mode>
+        <mode id="cats" name="指定类别各抽一">
+            用户勾选或指定若干类别，每个类别各随机抽 1 个词作为正向；反向仍按设定数量抽取。适合自定组合。
+        </mode>
+        <mode id="all" name="纯随机词">
+            从全部类别中随机抽 N 个「单词」作为正向；反向按设定数量抽取。
+            默认排除 negative、专有名词类别（character 角色 / artist 画师 / copyright 作品IP）与 情色组合（整段组合）。
+            命令行要包含画师/角色/作品名时，加 -IncludeNames。
+        </mode>
+        <mode id="combos" name="组合库（整套）">
+            从 情色组合（erotic-combos）里随机抽 N 条完整组合，每条本身就是一整套正向提示词；反向仍按设定数量抽取。
+            每条都是成场景的密集组合（平均 17 个词）：主题锚点 + 核心插入 + 拘束 + 反应 + 体液 / 姿势 / 场所 / 服装 / 道具，
+            触手主题再固定补 缠绕四肢躯干 4 + 触手动作 2 + 水体湿润 3，调教束缚主题固定补 高潮脸 4 + 生理崩坏反应 5 + 拘束姿势 2，
+            另有六条联动词（见下方 定制）保证「触手必缠四肢躯干、调教必出高潮脸、水体必带湿润光效」。
+            网页版首次使用会自动按需加载 组合库数据.js（约 32.5MB，实测约 1.7 秒，不进 抽卡数据.js，故不影响网页启动）；命令行等价：.\抽卡.ps1 -Combos -Count N。
+        </mode>
+        <mode id="gore" name="血腥暴力（整套）">
+            从 血腥暴力组合（gore-combos）里随机抽 N 条完整组合：血腥、暴力、杀害、秀色食人四条都必带，再按概率补凶器 / 绑缚 / 怪物 / 场所 / 特效。
+            给女性向 / 乙游 / BL 游戏·全男系列角色用，也当独立的猎奇出词器用。
+            网页版在模式里选「血腥暴力（整套）」，首次使用按需加载 血腥组合库数据.js；命令行等价：.\抽卡.ps1 -Gore -Count N。
+        </mode>
+    </modes>
+
+    <hot-filter>
+        <title>热度筛选 / 加权抽卡（post_count）</title>
+        <desc>词库已带 Danbooru post_count 热度（333922 词条有值；老自建词与少量对照词无热度，按 0 计）。这是「附加开关」，作用于 完整角色 / 指定类别各抽一 / 纯随机词 三个模式的正向抽词；反向提示词与两个组合库不受影响。</desc>
+        <tier>「热度」下拉（档位存 共享常量.json 的 hotTiers，单一来源）：全部(0) / ≥100 / 热门 ≥1000 / 爆款 ≥10000。非「全部」时只抽达到阈值的词条；某类凑不满阈值时，纯随机自动跳过该类，完整角色 / 指定类别对该类回退均匀抽。</tier>
+        <weight>勾「热度加权」后按 √热度 加权抽样（缺热度数据权重 1）：热门词更容易出现，但生僻词仍有机会，不至于全库只见 1girl / solo。可与任意档位叠加。</weight>
+        <cli>命令行等价参数：-MinPosts N（只抽 post_count ≥ N 的词）、-WeightPosts（√热度加权）。例：.\抽卡.ps1 -All -MinPosts 1000 -Count 20；.\抽卡.ps1 -All -WeightPosts -Count 12。</cli>
+        <web>网页在「抽卡」面板种子旁：「热度」下拉选档位 +「热度加权」勾选框，改完点「抽 卡」即生效。</web>
+        <note>加权只改变概率分布，不删词；「某抽到的词缺热度」只会出现在「全部」档或它所在类整体回退时。组合库 / 反向是否达标与热度无关。</note>
+    </hot-filter>
+
+    <character-cards>
+        <title>角色卡（一比一复刻角色）</title>
+        <desc>把某个角色的「完整复刻提示词」（角色 tag + 系列 + 外貌特征）存为一张卡；查询里出现该角色名（任一别名）时，「按需求出词」直接输出整张卡的正向提示词，不再逐词拆解，避免把角色名拆成无关词（如把「铃兰」拆成花名）。</desc>
+        <file>抽卡\角色卡.js —— window.CHARACTER_CARDS = [ { ... }, ... ]，是 JSON 数组。改完保存，网页刷新即生效，命令行直接读取，无需重新生成。</file>
+        <field name="id">任意唯一标识。</field>
+        <field name="name_en">Danbooru 标准角色 tag，如 suzuran (arknights)。</field>
+        <field name="name_zh">角色中文名，如 铃兰。</field>
+        <field name="aliases">别名数组：中文名、简称、拼音等；查询命中任一即算命中该卡。自动卡会并入 GuWuW / tag.sqlite / 词库三方中文译名（如 佩莉卡↔佩丽卡、罗西↔洛茜），按社区常用名也能命中。</field>
+        <field name="prompt_en">整条正向提示词（含角色 tag 与外貌词）。SD 权重括号写成 \\( \\)。</field>
+        <field name="prompt_zh">对应的中文提示词（可选）。</field>
+        <field name="features_en">纯特征版 EN（可选，不用手写）：构建时算好的外观特征串（去角色名/作品名/纠错词），不认识该角色的模型照这一串画。留空则查询时自动现算。</field>
+        <field name="features_zh">纯特征版中文（可选），与 features_en 同口径逐词对应。</field>
+        <field name="note">备注（可选）。</field>
+        <usage>在「按需求出词」输入「明日方舟角色铃兰」或「铃兰」，即输出该卡的完整正向提示词。</usage>
+        <note>同一角色的本体与各皮肤 / 变体（别名都含同一个短名）只会出最具体的一张：命中别名越长越优先，同样长时取角色本体（name_en 括号最少）；不同角色仍各自输出并拼接。命中角色卡后，句子中其余部分（场景 / 服装 / 姿势等）继续逐词拆解并追加到卡片后面，与卡片已有的词自动去重；若句中出现服装词，则触发「换装」（见下）。</note>
+        <auto>本仓库已自动生成角色卡（28469 张，源自 Danbooru 特征标签 + GuWuW 中文名，缺名时回退 tag.sqlite 中文名，已过滤露骨词）。已排除女性向 / 乙游 / 全男系列（内置名单 + 按男角色占比≥90% 自动判定），仅保留女角色；并按胸围+年龄细分为 body 档（幼小/贫乳/小胸/标准/丰胸/巨乳/爆乳），文件内从小到大排列。每张卡嵌有构建时算好的纯特征版（features_en / features_zh）。重建：_build\build-cards.ps1（默认出全部女角色；-OnlyLoli true 只出萝莉；-GirlOnly false 保留男角色；-NameDb 补名数据源见 定制）。文件约 29.6MB；网页版不再随启动加载，切到「按需求」时后台预载（首次约 2 秒），命中即时；命令行按需读取。</auto>
+    </character-cards>
+
+    <request-feature>
+        <title>按需求出词（支持整句）</title>
+        <desc>直接输入一句话或一串关键词（中英文都行），工具会自动拆解：扫描整句里出现过的词条，按类别汇总后组成正向提示词，并给出反向提示词。无需自己分词。</desc>
+        <card-priority>若查询命中「角色卡」（抽卡\角色卡.js），先输出整张卡；再把句中其余文字逐词拆解，作为“附加拆解”追加在卡片之后（与卡片重复的词会跳过）。</card-priority>
+        <match>匹配规则：中文词条按「包含」匹配；纯拉丁（英文/罗马字）词条按「词边界」匹配，避免 AIR 误命中 hair、un/une 之类的噪声。英文查询请写完整单词。</match>
+        <synonyms>支持常见中文俗名：死库水→学校泳衣；丝袜 / 白丝 / 黑丝 未写种类时一律按「连裤袜」（白丝→白色连裤袜、黑丝→黑色连裤袜）；裸足 / 赤脚→赤足；泳衣→泳装。要指定种类请直接写 过膝袜 / 及膝袜 / 大腿袜 / 短袜 等。</synonyms>
+        <outfit>
+            <title>换装（替换角色服装）</title>
+            <desc>当输入里点到了服装 / 制服类词（巫女、女仆装、泳装、护士服、和服…）时，工具会把命中角色卡里原有的服装词剔除，再拼上你点名的新服装；只保留人物特征（发色 / 瞳色 / 兽耳 / 尾巴 / 体型等）。没有写服装词时维持角色卡原样。</desc>
+            <usage>凯尔希穿女仆装 ／ 铃兰穿巫女服在神社 ／ 明日方舟角色铃兰 死库水</usage>
+            <note>若某张角色卡的名字本身就是普通服装词（例如中文名叫「女仆」的角色卡），当句中另有更具体的角色名时，该词只按服装处理，不再误命中那张角色卡。网页版标题会显示「·已换装」，命令行版会输出「【已换装】…」一行。中文侧同步剔除：卡里原服装词对应的中文条目按词库逐词比对后一并去掉，出图用中文也不会带回原服装。</note>
+        </outfit>
+        <old-model>
+            <title>老模型用：角色特征 + 纯特征版</title>
+            <desc>命中角色卡时，除整张卡外还会多给一段「角色特征」：把卡里的词按 人数 / 发色·发型 / 眼睛 / 五官·表情 / 体型·肤色 / 耳朵·尾巴·特殊体征 / 服饰 / 配饰·道具 / 身份·职业 / 未归类 分组列出（英文 + 中文），并给出「纯特征版」提示词——去掉角色名与作品名，只留能画出该角色的外观特征，专给不认识新角色的旧模型用。这串纯特征版已按同规则在构建时嵌进每张卡（features_en / features_zh），命中即直接输出；换装 / 改规则时回退为运行时现算，保证服装剔除始终与整卡同步。</desc>
+            <rule>归类依据是 提示词对照.xml 的类别；白名单与关键词写在 抽卡\共享常量.json（featureGroups / featurePrefixes / featureKw / featureKeep），命令行版与网页版共用同一份，改完跑 _build\build-constants.ps1 重生成 共享常量.js。落在 negative 类别的纠错词（extra ears、extra pupils、long fingers、loli 等）默认剔除并在结果里点名列出；green skin、schoolgirl 这类与负向同名的合法特征由 featureKeep 保下来。姿势 / 场景 / 情色 / 作品等非外观词一并剔除，只报个数。词库里查不到的词（约 0.7%）归入「未归类」保留。</rule>
+            <usage>输入「春原心奈」→ 上面照旧是整张卡的正向提示词，下面多一段「角色特征 · 老模型用」+【纯特征版 EN / 中文】。网页版该段带「复制纯特征版」按钮。</usage>
+            <note>换装时纯特征版与整卡保持一致：卡里的原服装词被剔除，你点名的服装并入「服饰」组（例：输入「春原心奈 泳装」，服饰组只剩 swimsuit）。纯特征版只含角色外观，句子里的场景 / 姿势词在正向提示词里，自己接到后面即可。</note>
+        </old-model>
+        <web>网页版顶部切到「🔎 按需求出词」标签，在文本框输入整句或关键词后点「拆解并生成」。可勾选「使用核心反向词」，或用「反向数」随机抽取反向词。结果可分别复制正向 / 反向 / 正加反；命中角色卡时还有「复制纯特征版」。</web>
+        <cli>
+            <usage>.\按需求.ps1 "一个银发双马尾的猫耳女孩，穿着泳装，在泳池边害羞地笑着"</usage>
+            <usage>.\按需求.ps1 "银发 双马尾 猫耳 泳装"</usage>
+            <usage>.\按需求.ps1 "tentacle bondage 和服" -NegCount 6</usage>
+            <param name="-Query" required="true" position="0">一句话或关键词串，中文或英文均可。</param>
+            <param name="-NegCount" default="0">大于 0 时随机抽该数量的反向词；等于 0 使用内置核心反向词（约 68 条通用负面标签）。</param>
+            <param name="-Copy">复制结果到剪贴板。</param>
+            <param name="-Out">写入文件。</param>
+            <tip>词越具体越准：用「银发」而非「发」，用「猫耳」而非「猫」。整句里出现词库中的词就会被抓出，例如「银发猫耳泳装少女」会命中 银发 / 猫耳 / 泳装。</tip>
+        </cli>
+    </request-feature>
+
+    <web>
+        <step order="1">在文件管理器中双击 抽卡.html，用浏览器打开（或双击 启动网页版.cmd）。</step>
+        <step order="2">顶部选择「模式」：完整角色 / 指定类别各抽一 / 纯随机词。</step>
+        <step order="3">设置「套数」、「反向数」（正向外的反向词数量，默认 30）与「种子」（可留空）；需要的话再选「热度」档位、勾「热度加权」（默认 全部 + 不加权，与旧版行为一致）。</step>
+        <step order="4">点击「抽 卡」按钮。</step>
+        <step order="5">每张卡片上半部是正向、下半部是反向，可分别点「复制正向 / 复制反向」；顶部「复制全部」复制所有套。</step>
+        <step order="6">切到「指定类别各抽一」时，会展开类别勾选框，可用「默认配方 / 全选 / 全不选」快捷操作。</step>
+        <note>网页版完全离线可用，不联网，也不会上传任何内容。</note>
+    </web>
+
+    <cli>
+        <invoke usage="在 抽卡 文件夹地址栏输入 cmd 回车打开终端；或直接双击 抽卡.cmd">
+            .\抽卡.ps1 参数表
+        </invoke>
+        <params>
+            <param name="-Count" type="int" default="1">抽卡套数，范围建议 1 至 30。</param>
+            <param name="-NegCount" type="int" default="30">每套反向提示词数量；设 0 则不出反向。</param>
+            <param name="-All" type="switch" default="关">启用纯随机词模式，数量由 -Count 决定。</param>
+            <param name="-IncludeNames" type="switch" default="关">纯随机词时包含 character / artist / copyright 专有名词类别（情色组合仍不参与）。</param>
+            <param name="-Categories" type="字符串数组" default="空">指定类别各抽一，用英文逗号分隔类别 id 或中文名。</param>
+            <param name="-Combos" type="switch" default="关">从情色组合库随机抽整套组合，数量由 -Count 决定。优先级：-All &gt; -Categories &gt; -Gore &gt; -Combos。词库不含 erotic-combos 时会自动尝试单独加载 情色提示词组合库.xml。</param>
+        <param name="-Gore" type="switch" default="关">从血腥暴力组合库随机抽整套组合（女性向/乙游/BL 游戏与全男系列角色用）。会自动尝试单独加载 血腥暴力组合库.xml。</param>
+            <param name="-MinPosts" type="int" default="0">热度筛选：&gt;0 时正向词只抽 Danbooru post_count 达标的词条（反向与组合库不受影响；某类整体不达标时纯随机跳过该类、其余模式回退均匀抽）。</param>
+            <param name="-WeightPosts" type="switch" default="关">热度加权：正向词按 √热度 抽样，热门词更常出现；缺热度数据权重 1。可与 -MinPosts 叠加。</param>
+            <param name="-ListCategories" type="switch" default="关">列出所有类别 id、中文名与词条数。</param>
+            <param name="-Seed" type="int" default="空">随机种子，填相同的数字可复现同一结果。</param>
+            <param name="-Copy" type="switch" default="关">把结果（含正反向）复制到系统剪贴板。</param>
+            <param name="-Out" type="路径" default="空">把结果写入指定文本文件（UTF-8）。</param>
+        </params>
+        <examples>
+            <example cmd=".\抽卡.ps1">抽 1 套（正向 + 默认 30 个反向）。</example>
+            <example cmd=".\抽卡.ps1 -Count 3 -NegCount 20">连抽 3 套，每套 20 个反向词。</example>
+            <example cmd=".\抽卡.ps1 -All -Count 20">从全库随机抽 20 个正向单词并配反向（不含角色/画师/作品名与整段组合）。</example>
+            <example cmd=".\抽卡.ps1 -All -IncludeNames -Count 20">纯随机并包含 角色 / 画师 / 作品名。</example>
+            <example cmd=".\抽卡.ps1 -Categories hair-style,hair-color,eye">发型、发色、眼睛各抽 1 个正向词。</example>
+            <example cmd=".\抽卡.ps1 -Categories 发型,眼睛 -Count 2">类别也可用中文名，抽 2 套。</example>
+            <example cmd=".\抽卡.ps1 -Categories character -Count 5">从角色名里抽 5 个。</example>
+            <example cmd=".\抽卡.ps1 -Combos -Count 3">从情色组合库随机抽 3 条完整组合。</example>
+            <example cmd=".\抽卡.ps1 -Gore -Count 3">从血腥暴力组合库随机抽 3 条（杀害 / 秀色都必带）。</example>
+            <example cmd=".\抽卡.ps1 -All -MinPosts 1000 -Count 20">热度筛选：纯随机只抽 post_count ≥1000 的热门词（实测全部达标）。</example>
+            <example cmd=".\抽卡.ps1 -All -WeightPosts -Count 12">热度加权：按 √热度 抽样，solo / blue eyes 这类爆款词更容易出现。</example>
+            <example cmd=".\抽卡.ps1 -All -MinPosts 1000 -WeightPosts -Count 12">两者叠加：只在热门词里加权。</example>
+            <example cmd=".\抽卡.ps1 -NegCount 0">只抽正向，不出反向。</example>
+            <example cmd=".\抽卡.ps1 -Seed 12345 -Copy">固定种子并复制到剪贴板。</example>
+            <example cmd=".\抽卡.ps1 -Count 5 -Out 结果.txt">抽 5 套并保存到 结果.txt。</example>
+            <example cmd=".\抽卡.ps1 -ListCategories">查看全部类别 id 与词条数。</example>
+        </examples>
+    </cli>
+
+    <output>
+        <field name="正向 EN">该套正向英文提示词，逗号分隔，放入正向框。</field>
+        <field name="正向 中文">对应中文，便于核对。</field>
+        <field name="反向 EN">从 negative 类别抽出的反向英文提示词，放入反向框。</field>
+        <field name="反向 中文">对应中文。</field>
+        <field name="正向明细">逐类别列出「类别 中文英文对照」。</field>
+    </output>
+
+    <seed>
+        在网页版「种子」或命令行 -Seed 填相同数字，可复现完全一致的正向与反向结果；留空则每次随机。
+    </seed>
+
+    <customize>
+        <topic name="改配方">
+            命令行：编辑 抽卡.ps1 中 $recipeBase（基础类别）与 $recipePool（可选出彩类别）。
+            网页：编辑 抽卡.html 中 BASE 与 POOL 两个数组。
+        </topic>
+        <topic name="改反向词">
+            反向词来自词库 negative 类别。要固定使用一批反向词，可编辑 提示词总库.xml / 提示词对照.xml 的 negative 类别，
+            或调整「反向数 / -NegCount」控制数量。
+        </topic>
+        <topic name="改词库">
+            直接编辑上级目录的 提示词总库.xml 或 提示词对照.xml（category 与 term 节点）。改完后需重新生成网页数据文件 抽卡数据.js，
+            网页版才会读到最新词条；命令行版每次运行都直接读取 XML，无需重新生成。
+        </topic>
+        <topic name="重新合并 TagSDanbooru">
+            合并脚本在 _build\merge-tagsd.ps1：会读取 TagSDanbooru 的 CSV，按类别映射并入现有词库，用 GuWuW 修正角色 / 作品中文名，
+            并重生成 提示词对照.xml/.csv/.json、提示词总库.xml、抽卡数据.js、总目录.xml；原文件先备份到 _backup\。
+            注意：它会重建 提示词总库.xml，两个组合库段（erotic-combos / gore-combos）会丢，合并完要按「手工加词」或在 定制 里重跑两次入库命令补回来。
+            数据源已固化到 _build\data\（tagsd_danbooru_zh.csv、danbooru_zh_translations.csv、characters_str_tags.txt）。
+        </topic>
+        <topic name="重新合并 tag.sqlite（Danbooru 全量标签库）">
+            合并脚本在 _build\merge-tagdb.ps1（引擎 _build\merge-tagdb.mjs，需 Node.js ≥ 22.5，用内置 node:sqlite 读库）：
+            数据源 tags(name, category, cn_name, post_count) 共 334089 行（category 0=通用 1=画师 3=作品 4=角色 5=元）。
+            规则沿用 merge-tagsd：按归一化英文去重，已有词只补空 zh / 换「（」开头的占位 zh，角色/作品的 zh 去掉「（系列）」尾注，
+            别名命中跳过；通用(0) 归入 general-extra 综合标签，其余按类别归位，新词追加在各类别末尾。
+            一次性重生成 提示词对照.xml、提示词总库.xml（erotic-combos / gore-combos 原块原样保留，不会再丢）、抽卡数据.js、总目录.xml；
+            原文件备份到 _backup\&lt;原名&gt;.入库tagdb前.&lt;ext&gt;。
+            本次合并落账：新增 185241 词（artist +92013 / character +61347 / copyright +10287 / general-extra +21262 / meta +332），
+            补/换 zh 19084 处（填掉 1.9 万条空名与占位名），别名命中跳过 167 条。
+            用法：powershell -ExecutionPolicy Bypass -File _build\merge-tagdb.ps1 -ReimportData（把外部库重拷到 _build\data\tag.sqlite 归档后合并）；
+            归档已就位时直接 -File _build\merge-tagdb.ps1 重跑（幂等，同库合并不会出新词）。
+            post_count 现已提取进产物：词条 posts 属性（&gt;0 才写，只记到 对照/总库/抽卡数据.js，组合库无热度）、抽卡数据.js 词条第三元素 [en, zh, 热度]；
+            同名跨类别的重复词条（旧库遗留约 5 千组）热度会同步到每一份。另导出 _build\data\tagdb-names.tsv
+            （name / cn / posts 三列，125099 行，角色+作品，merge-tagdb.mjs 每次合并自动重写，供 build-cards.ps1 补名）。
+            提取出的热度供 抽卡 -MinPosts / -WeightPosts 与网页「热度」档使用（见 热度筛选 / 加权抽卡 小节）。
+        </topic>
+        <topic name="重建角色卡">
+            运行 _build\build-cards.ps1 重新生成 抽卡\角色卡.js（默认出全部女角色；-OnlyLoli true 只出萝莉；-GirlOnly false 保留男角色；-Out 可指定输出文件，验证或双库并存时用，不动现用卡库）。手写的铃兰卡会保留在最前（手写卡不带 features 字段，查询时现算）。
+            中文名 GuWuW 优先，缺名或「（系列）」占位时自动回退 sqlite 中文名：-NameDb 指向 _build\data\tagdb-names.tsv（merge-tagdb.mjs 导出，默认路径已内置）。
+            每张自动卡同时嵌入「纯特征版」：按 共享常量.json 的 featureGroups / featurePrefixes / featureKw / featureKeep 规则，去角色名/作品名/纠错词（负向同名词）后的外观词串（features_en / features_zh，不带质量前缀）。查询端（CLI 与网页）命中即直接输出嵌入串；换装时回退运行时现算以同步剔除原服装词；改了 feature* 规则后重跑本脚本即可刷新嵌入。
+            2026-10-22 重刷落账（tag.sqlite 合并后首次）：卡源与卡数不变（28459 张），词库翻译对照由 16 万扩到 34.4 万条；
+            name_zh 空白的卡 9581 → 883（补名 8700，含 674 张作品中文名变动），prompt_zh 译文变动的卡 8861；文件 19.7 → 29.6MB（嵌纯特征版 +9.3MB，28448 张有特征串，10 张非人形卡无可用外观词故留空）。
+            旧版备份在 _backup\角色卡.重刷前.js 与 _backup\角色卡.嵌特征前.js。
+            2026-10-22 洁尔佩塔归位：gilberta (arknights) 在卡源里原以技术测试期旧名 angelina (endfield) 记录，已改名重建（卡 id = gilberta-arknights，自动接上中文名／别名，系列作 明日方舟：终末地）；同批清掉重复胸围词与词条「感染监测仪、明日方舟」脏尾注（源表 tagsd_danbooru_zh.csv / danbooru_zh_translations.csv 与现产物同步修正）。
+            2026-10-24 终末地补卡：X779 数据集仓库冻结于 2024-11（无新角色行），改用 r.jina.ai 代理调 danbooru posts.json 现算共现特征（每角色最新 ≤1000 帖；general 标签按占比 ≥15%、去元数据/构图/姿势/表情/背景/露骨词，性别词置首）并入卡源：
+            perlica / endministrator / female_endministrator 三条旧行升级为终末地数据；新增 rossi / typhoeus / liino / si / xaihi / snowshine / m3 / andre / tata / fiona 十张卡（pogranichnik / lifeng / char / argent_flow 为男角色，被既有规则排除）。卡数 28459 → 28469。
+            无网络或需补其他新角色时：把角色在 danbooru 的高频 general 标签写成「角色tag, 系列tag, 性别词, 标签…」一行追加进 _build\data\characters_str_tags.txt，再跑本脚本即可。
+        </topic>
+        <topic name="联动词（linkRules）：触手必缠四肢躯干、调教必出高潮脸、水体必带湿润光效">
+            抽卡\共享常量.json 的 linkRules.rules 是「命中某类词就自动补标志性词」的表，命令行按需求、网页按需求、组合生成三处共用同一张表。当前六条（count 是补几个词）：
+            · 触手缠绕四肢躯干 =2：命中触手词（whenRx 匹配词面 tentacle，或命中 触手怪物 / 触手生物 / 触手服 类别）→ 补 holding / restrained / around legs / around waist / on breasts / suspended / coiling 这类缠绕词。
+            · 触手动作内射产卵 =1：同样条件 → 补 tentacle in mouth / suckers / bulge / oviposition / egg laying / in womb / through body 这类动作词。
+            · 调教高潮脸 =2：命中调教束缚词（training / bdsm / bondage / discipline / collar / leash / rope / handcuff / gag / suspension / torture…）→ 补 ahegao / orgasm face / ecstasy face / rolling eyes / half lidded / tongue out / mind break。
+            · 生理崩坏反应 =2：命中调教 / 高潮 / 触手词 → 补 blush / tears / drool / saliva / open mouth / tongue / moan / pant / broken / convulsing / arching / trembling / spasming / squirming。
+            · 拘束姿势 =1：命中触手 / 束缚词 → 补 arms behind back / bound / spread / forced / kneel / toes curling / shibari / suspension / cuff。
+            · 水体湿润细节 =2：命中 水 / 泳 / 湿 / 池 / underwater / slime 这类词 → 补 water / wet / droplets / slime / slick / bubble / reflection / refraction / caustics / depth of field / rim light / glisten。
+            字段：when（触发类别 id）、whenWords（触发词条，精确）、whenRx（触发词面正则）、cats（从哪些类别取词）、count（补几个）、prefer（优先词，只要命中触发就一定从这个池里取，保证必出）。
+            组合库里另有一层「主题专属槽位」（_build\data\scene-slots.json 的 themeSlots）：触手主题固定补 缠绕四肢躯干 4 + 触手动作 2 + 水体湿润 3；调教束缚主题固定补 高潮脸 4 + 生理崩坏反应 5 + 拘束姿势 2。要更密就更这些 count，要更短就降下来。
+            改完：跑 _build\build-constants.ps1（网页要先有这个）；组合库要重生成才带新联动：
+            powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-scene-combos.ps1 -Out 情色提示词组合库.xml 然后 powershell ... -File _build\build-combos.ps1
+        </topic>
+        <topic name="黑名单词条（wipeTerms）：任何模式都不写进提示词">
+            抽卡\共享常量.json 的 wipeTerms.terms 是"永不进正向提示词"的词条表（英文 tag，大小写不敏感）。当前是学生泳衣上写名字的框那一类：name tag / chest name tag / nameplate on swimsuit / class number on swimsuit / nameplate（原来散在 学生泳装、校服制服、服饰细节零件、胸针别针、综合标签 五个类别里，会被随机抽到或写进组合）。
+            生效点：命令行读词库时剔除、网页读词库时剔除、组合库入库时把组合里的这些词整条剔掉（中英文都剔）、组合生成时也不进候选池。负面提示词类别不受影响（label / tag 这类负向词照旧可用）。
+            要加要删就改这个表，然后：跑 _build\build-constants.ps1（网页要先有这个才生效），命令行立刻生效；已经生成好的组合库要重新入库才干净：
+            powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-combos.ps1 -Src 情色提示词组合库.xml（再对 血腥暴力组合库.xml 跑一次带 -CategoryId gore-combos … 的那条命令）。
+        </topic>
+        <topic name="女性向 / 乙游 / BL 游戏·全男系列：只出血腥暴力提示词">
+            这类角色（名单见下）命中后「按需求出词」不做情色拆解，只输出血腥暴力提示词：命中的角色 / 作品 tag + 血腥暴力组合（含杀害 / 秀色食人），并在结果里标明规则。
+            名单来源是 抽卡\共享常量.json 的 goreOnly：series = 内置乙游 / BL 游戏名单（33 条通配，与 _build\build-cards.ps1 共用）；seriesAuto = 自动判定全男系列快照（50 条）；useAuto=false 就只认 series。
+            词库里的角色词条不带系列名，所以另外生成角色名单：_build\build-gore-chars.ps1 → 抽卡\女性向男同角色.txt（命令行）+ 抽卡\女性向男同角色.js（网页），当前 714 条。
+            改了名单（共享常量.json 的 goreOnly）要跑两件事：_build\build-gore-chars.ps1（重出角色名单）、_build\build-constants.ps1（重出网页用 共享常量.js）。
+            count = 出几条血腥暴力组合；withCharacter = 是否带上命中的角色 / 作品 tag；这两项也在 goreOnly 里改。
+        </topic>
+        <topic name="场景化重生成组合库（推荐路径）">
+            组合库由「槽位配方」生成，不再靠随机堆词。配方在 _build\data\scene-slots.json：
+            每个组合 = 主题锚点（必有）+ 核心插入（必有，penetration / act-vaginal / act-anal 三类）+ 拘束（必有）+ 反应（必有）+ 体液 / 姿势 / 场所 / 服装 / 道具 / 身体特征 / 特效（按概率 p 抽），同一组合内不重复用词。
+            主题共 16 种（触手 / 怪物外道 / 调教束缚 / 兽交人外 / 情趣道具 / 虫植黏液 / 精神控制 / 群交 / 露出痴汉 / 榨乳哺乳 / 播种产卵 / 机械义体 / 兽人毛皮 / 改造变身 / 拷问猎奇 / 人偶时停），weight 决定配比。
+            改口味只改这个 json：换主题词改 anchor / extra，改比例改 weight，改每条词数改 tagsPerCombo，想让某主题的场所更贴题就给该主题加 overrides.place（类别 id 数组）。
+            重生成：powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-scene-combos.ps1（默认写到 情色提示词组合库.场景草稿.xml，不动现役库；加 -Count 200 -Sample 8 -SampleTheme 触手 可先出小样看效果）
+            满意后入库：powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-combos.ps1 -Src 情色提示词组合库.场景草稿.xml（旧库会先备份到 _backup\）
+            词全部从 提示词对照.xml 点名的类别里取，脚本本身不写死任何词；随机种子固定在配方里，同配方同种子结果可复现。
+        </topic>
+        <topic name="连贯性审计">
+            _build\audit-combos.ps1 用同一份配方当尺子量任意组合库：每个槽位的命中率、「插入+拘束」或「杀害+秀色」这类必需槽位同时出现的比例、主题锚点分布、以及多少词在词库里查不到类别。
+            例：powershell -NoProfile -ExecutionPolicy Bypass -File _build\audit-combos.ps1 -File 情色提示词组合库.xml -Samples 5
+            血腥暴力库：加 -Recipes _build\data\scene-slots-gore.json -File 血腥暴力组合库.xml
+            对比改造前的旧随机库：-File _backup\情色提示词组合库.旧随机版.xml
+        </topic>
+        <topic name="血腥暴力库（生成 / 入库 / 扩词）">
+            配方 _build\data\scene-slots-gore.json：每个组合 = 主题锚点 + 伤害出血 + 杀害 + 秀色食人 + 猎奇 + 痛苦反应 + 氛围（必含）+ 凶器 / 绑缚 / 怪物 / 场所 / 服装 / 身体异变 / 特效（按概率）；11 个主题（拷问处刑 / 猎奇残肢 / 食人秀色 / 吞食猎奇 / 杀害现场 / 绑架拘禁 / 战场厮杀 / 怪物袭击 / 超自然恐怖 / 末世求生 / 寄生异变），weight 决定配比。
+            重新生成：powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-scene-combos.ps1 -Recipes _build\data\scene-slots-gore.json -CategoryId gore-combos -CategoryZh 血腥暴力组合 -Out 血腥暴力组合库.xml
+            入库：powershell -NoProfile -ExecutionPolicy Bypass -File _build\build-combos.ps1 -Src 血腥暴力组合库.xml -Out 血腥暴力组合库.xml -CategoryId gore-combos -CategoryZh 血腥暴力组合 -WebData 抽卡\血腥组合库数据.js -WebVar GORE_COMBOS
+            想加词：在 提示词对照.xml 对应类别里加词条即可（杀害/尸体/处刑类归 vore-guro、vore-guro-detail，食人/秀色归 vore-guro、vore-types，血腥归 fluid-blood，拷问归 torture-detail），配方不用动。
+        </topic>
+        <topic name="手工加词 / 外来源入库">
+            直接编辑 情色提示词组合库.xml：在 &lt;category id="erotic-combos"&gt; 里加 &lt;term en="…" zh="…"/&gt;，然后无参运行 _build\build-combos.ps1 一条命令入库：
+            流式读取源文件（自动识别 &lt;prompt-library&gt; 与 &lt;prompt-glossary&gt; 两种格式；按 en 去重、跳过空 en）→ 重写 情色提示词组合库.xml → 替换 提示词总库.xml 里的 erotic-combos 整段并同步根节点 categories/terms 计数（原文件先备份到 _backup\）→ 生成网页用 抽卡\组合库数据.js。
+            源文件到 20MB+ / 数十万条也不会爆内存（不建 DOM）。默认源就是生成库自己（先读完再重写，逐字节幂等，解析失败会在写出前报错）；另给源文件也行：-Src 别的文件.xml。参数：-Src 指定源文件、-KeepDuplicates 保留重复、-NoZong 不更新总库、-NoWeb 不生成网页数据。
+            入库时还会做两件清洗：① 词条内部的逗号换成空格（如词库里的 snow,ice → 组合里写成 snow ice），保证组合的中英文一一对应；② 剔掉 共享常量.json 里 wipeTerms 的黑名单词条（名牌之类）。
+            注意：手工加的词不参与场景拼装；下一次重生成会把整库换成配方生成的结果，想长期保留就同时补进配方或词库类别。
+        </topic>
+        <topic name="修改共享常量">
+            反向核心词、服装判定词、中文俗名（SYN）、完整角色配方、角色特征分组（featureGroups / featurePrefixes / featureKw / featureKeep）等原先分散在 抽卡.ps1 / 按需求.ps1 / 抽卡.html 里各存一份，现已集中到单一来源 抽卡\共享常量.json。
+            命令行版（抽卡.ps1 / 按需求.ps1）直接读取该 .json；网页版读取 抽卡\共享常量.js（由生成脚本产出）。
+            改常量只需改 共享常量.json 一处，然后重建一次网页用文件：powershell -ExecutionPolicy Bypass -File _build\build-constants.ps1
+        </topic>
+    </customize>
+
+    <faq>
+        <qa>
+            <q>双击 抽卡.cmd 提示无法运行脚本</q>
+            <a>抽卡.cmd 已带 -ExecutionPolicy Bypass 自动放行；若仍受限，请在终端先执行 Set-ExecutionPolicy -Scope Process Bypass。</a>
+        </qa>
+        <qa>
+            <q>提示找不到词库</q>
+            <a>把 提示词总库.xml（或 提示词对照.xml）放在 抽卡 目录或其上级（提示词工程）目录即可。</a>
+        </qa>
+        <qa>
+            <q>网页版打开是空白或没数据</q>
+            <a>确认 抽卡数据.js 与 抽卡.html 在同一目录；改过词库后需重新生成 抽卡数据.js。</a>
+        </qa>
+        <qa>
+            <q>「按需求出词」英文关键词命中了奇怪的东西</q>
+            <a>已按词边界匹配英文，请写完整单词；中文按包含匹配。若仍有个别噪声，是词库中同名短词所致。</a>
+        </qa>
+        <qa>
+            <q>纯随机词老是抽到画师/角色名</q>
+            <a>默认已排除 character / artist / copyright；命令行加 -IncludeNames 才会包含。</a>
+        </qa>
+        <qa>
+            <q>反向提示词每次都不一样</q>
+            <a>属正常，反向每次随机抽取；填相同种子可复现。</a>
+        </qa>
+        <qa>
+            <q>不想要反向提示词</q>
+            <a>把「反向数」或 -NegCount 设为 0。</a>
+        </qa>
+        <qa>
+            <q>输入角色名，结果把名字拆成了花名/别的词，没有复刻角色</q>
+            <a>该角色还没建卡（自带的角色 tag 中文名不可靠）。在 抽卡\角色卡.js 里加一张卡（填 name_zh / aliases / prompt_en），命中后即整条输出。</a>
+        </qa>
+        <qa>
+            <q>角色卡改了没生效</q>
+            <a>确认 角色卡.js 与 抽卡.html 在同一目录；网页按 Ctrl+F5 强制刷新；命令行每次运行都会重新读取，无需刷新。</a>
+        </qa>
+        <qa>
+            <q>我的模型不认识新角色，出了个不相干的人</q>
+            <a>用命中角色卡时附带的「纯特征版」：它去掉了角色名与作品名，只留发色 / 发型 / 眼睛 / 体型 / 服饰等特征词，旧模型照特征也能画得像。特征明细里若缺了你想要的那一项，直接在纯特征版后面补英文特征词即可。</a>
+        </qa>
+        <qa>
+            <q>特征明细里的「未归类」是什么</q>
+            <a>是卡片里有、但 提示词对照.xml 查不到的词（约 0.7%，多为新出现的组合词）。无法判断类别就先原样保留，不影响使用。</a>
+        </qa>
+        <qa>
+            <q>组合库为什么抽出来像一整场戏，而不是一堆不相干的词</q>
+            <a>组合库已改为按「槽位配方」生成：每条都必带 主题锚点 + 核心插入 + 拘束 + 反应，再按概率补 体液 / 姿势 / 场所 / 服装 / 道具 / 身体特征 / 特效，词全部取自 提示词对照.xml 的类别。用 _build\audit-combos.ps1 可以量：现在 100% 的组合同时含「插入 + 拘束」（改造前的随机库只有 4.8%）。</a>
+        </qa>
+        <qa>
+            <q>组合现在为什么这么密（平均 17 个词），怎么调短</q>
+            <a>密度是按你给的范例（触手+泳池+调教那种密集写法）配的：触手/调教主题用 themeSlots 固定补 缠绕4+动作2+水体3 / 高潮脸4+生理5+姿势2，另有六条联动词。调短改两处：_build\data\scene-slots.json 的 tagsPerCombo（现在是 [10,15]，即基础部分词数上限）和各主题 themeSlots 的 count；抽卡\共享常量.json 里 linkRules 各条的 count。改完跑 build-constants.ps1，组合库再 build-scene-combos.ps1 + build-combos.ps1 重生成（全量约 5 分钟）。</a>
+        </qa>
+        <qa>
+            <q>为什么写「触手 调教」会自动多出几个词</q>
+            <a>那是联动词（抽卡\共享常量.json 的 linkRules）：命中触手词自动补「缠绕四肢 / 躯干」的词（tentacles holding / restrained by tentacles / tentacle around legs / tentacle around waist / tentacles on breasts / suspended by tentacles…），命中调教束缚词自动补「高潮脸 / 阿黑颜」（ahegao / orgasm face / ecstasy face / rolling eyes back / tongue out / mind break…）。命令行与网页都会标成「联动·」分组。不想要就删掉 linkRules 里对应那条，再跑 _build\build-constants.ps1。</a>
+        </qa>
+        <qa>
+            <q>学生泳衣（死库水）为什么不再带"名牌"了</q>
+            <a>学生泳装类别原来带着 name tag 名牌 / chest name tag 胸前名牌 / nameplate on swimsuit 泳衣名牌 / class number on swimsuit 泳衣班级号，一被抽到就会写进提示词、画出来就是胸前一个写名字的框。现在这些词进了黑名单（抽卡\共享常量.json 的 wipeTerms），命令行、网页、组合库都不再写它们；原来的 校徽 / 校章 保留。还想屏蔽别的词就往 wipeTerms.terms 里加，然后跑 _build\build-constants.ps1，组合库再重新入库一次。</a>
+        </qa>
+        <qa>
+            <q>女性向 / 乙游 / BL 游戏的角色为什么只出血腥暴力词</q>
+            <a>这是设定：这类作品的角色（刀剑乱舞 / 偶像梦幻祭 / 扭蛋仙境 / 恋与深空 / 新世界狂欢 等，名单在 抽卡\共享常量.json 的 goreOnly）命中后只输出血腥暴力提示词——含杀害与秀色食人，不做情色拆解。想改成只认内置名单，把 goreOnly.useAuto 设为 false 后重跑 _build\build-gore-chars.ps1 与 _build\build-constants.ps1；想彻底关掉把 enabled 设为 false。</a>
+        </qa>
+        <qa>
+            <q>写了小说 / 漫画里的全男作品（如灌篮高手、蓝色监狱）也只出血腥暴力</q>
+            <a>因为自动判定全男系列（男角色占比 ≥90%）也并进了名单。只想要乙游 / BL 游戏那一批，就把 goreOnly.useAuto 设为 false，再重跑 _build\build-gore-chars.ps1 与 _build\build-constants.ps1。</a>
+        </qa>
+        <qa>
+            <q>血腥暴力词都从哪来</q>
+            <a>全部来自 提示词对照.xml 自己的类别：杀害（death / execution / corpse / corpse pile / snuff）、秀色（cannibalism / flesh eating / butcher / meat / raw meat / 吞食）、血腥（fluid-blood / vore-guro-detail）、暴力（torture-detail / impale-pierce / crime-dark / 战斗武器）。配方只决定怎么拼，不写死任何词。</a>
+        </qa>
+        <qa>
+            <q>想让组合库偏某个口味（比如触手多一点）</q>
+            <a>改 _build\data\scene-slots.json 里各主题的 weight（现在是 触手 18 / 怪物外道 12 / 调教束缚 12 …），或给主题加 overrides.place 让场所更贴题；然后跑 _build\build-scene-combos.ps1 再用 _build\build-combos.ps1 -Src 情色提示词组合库.场景草稿.xml 入库。</a>
+        </qa>
+        <qa>
+            <q>「白色」这类词为什么抽出画师 / 角色名</q>
+            <a>词库里没有单独的颜色词 white，「白色」正好是两个名字标签的中文名（角色 white (among us) 与画师 whitey），所以按中文包含匹配就命中了它们。要颜色请写具体组合，如 white hair / white dress。</a>
+        </qa>
+    </faq>
+
+</tutorial>
